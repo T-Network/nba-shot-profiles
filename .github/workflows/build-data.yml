@@ -1,0 +1,58 @@
+name: Refresh shot data
+
+# The dashboard's data files are generated from ESPN, not hand-edited, so let CI
+# build them instead of committing ~200 KB of shot tuples by hand.
+#
+# Trigger is limited to changes that can alter the output: the build script and
+# the player/season lists it contains. The job's own commit only touches data/,
+# so it cannot re-trigger itself.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - scripts/build-data.mjs
+      - .github/workflows/build-data.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: refresh-shot-data
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # One play-by-play file per game is ~800 KB, so reuse them between runs.
+      - name: Restore play-by-play cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/plays
+          key: plays-${{ github.run_id }}
+          restore-keys: |
+            plays-
+
+      - name: Build data
+        run: node scripts/build-data.mjs
+
+      - name: Commit regenerated data
+        run: |
+          git config user.name "shot-data-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data
+          if git diff --cached --quiet; then
+            echo "Data unchanged; nothing to commit."
+            exit 0
+          fi
+          git commit -m "Regenerate shot data from ESPN"
+          git push
