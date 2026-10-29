@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>NBA shot profiles — three opening nights</title>
+<title>NBA shot profiles — every shot, three seasons</title>
 <style>
   :root {
     --bg: #0a0e17;
@@ -26,63 +26,97 @@
     font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     padding: 28px 20px 60px;
   }
-  .wrap { max-width: 1320px; margin: 0 auto; }
-  header.top { margin-bottom: 20px; }
+  .wrap { max-width: 1340px; margin: 0 auto; }
+  header.top { margin-bottom: 18px; }
   .kicker {
     text-transform: uppercase; letter-spacing: .16em; font-size: 11px;
     color: var(--muted); font-weight: 600; margin-bottom: 8px;
   }
-  h1 { font-size: clamp(26px, 3.4vw, 40px); line-height: 1.1; margin: 0 0 8px; letter-spacing: -.02em; }
-  h1 span { color: var(--s26); }
-  .sub { color: var(--muted); max-width: 86ch; margin: 0; }
+  h1 { font-size: clamp(25px, 3.2vw, 38px); line-height: 1.1; margin: 0 0 8px; letter-spacing: -.02em; }
+  h1 .dim { color: var(--muted); font-weight: 500; }
+  .sub { color: var(--muted); max-width: 92ch; margin: 0; font-size: 14px; }
   .sub b { color: var(--ink); font-weight: 600; }
 
-  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 20px 0 4px; }
-  .tabs button {
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 18px 0 0; align-items: center; }
+  .tabs button, .pills button {
     appearance: none; border: 1px solid var(--line); background: #0e1521; color: var(--muted);
     font: inherit; font-size: 13.5px; font-weight: 600; padding: 8px 15px; border-radius: 10px; cursor: pointer;
     transition: background .12s ease, color .12s ease, border-color .12s ease;
   }
-  .tabs button:hover { color: var(--ink); border-color: #33445f; }
-  .tabs button[aria-pressed="true"] { background: #22304a; color: var(--ink); border-color: #3a5170; }
+  .tabs button:hover, .pills button:hover { color: var(--ink); border-color: #33445f; }
+  .tabs button[aria-pressed="true"], .pills button[aria-pressed="true"] {
+    background: #22304a; color: var(--ink); border-color: #3a5170;
+  }
+  .pills { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .pills .lab { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: #6f7f97; margin-right: 2px; }
+  .pills button { font-size: 12.5px; padding: 6px 12px; border-radius: 8px; }
+  .pills button .n { color: #7f8fa8; font-weight: 500; margin-left: 6px; font-variant-numeric: tabular-nums; }
+  .pills button[aria-pressed="true"] .n { color: #b9c7db; }
+  .bar { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 14px; }
+  .hint { color: #6f7f97; font-size: 12px; }
 
   .grid { display: grid; gap: 16px; }
-  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-
   .card {
     background: linear-gradient(180deg, var(--panel-2), var(--panel));
     border: 1px solid var(--line); border-radius: 16px; padding: 18px;
   }
-  .card h2 { font-size: 15px; margin: 0 0 2px; letter-spacing: .01em; }
-  .card .meta { color: var(--muted); font-size: 12.5px; }
-  .badge {
-    display: inline-block; padding: 2px 9px; border-radius: 999px;
-    font-size: 11.5px; font-weight: 700; letter-spacing: .04em; vertical-align: 2px;
-  }
 
-  .line { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; }
-  .stat .v { font-size: 21px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-  .stat .k { font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+  /* kpi strip */
+  .kpis { display: flex; gap: 10px; flex-wrap: wrap; }
+  .kpi { min-width: 92px; flex: 1 1 92px; }
+  .kpi .v { font-size: 21px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; line-height: 1.25; }
+  .kpi .v small { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .kpi .k { font-size: 10.5px; text-transform: uppercase; letter-spacing: .09em; color: var(--muted); }
 
-  .note { color: #c8a45f; font-size: 12px; margin-top: 10px; border-left: 2px solid #6b5322; padding-left: 8px; }
+  .split-main { grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); align-items: start; }
+  .split-even { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 
-  section { margin-top: 30px; }
-  .sec-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-  .sec-head h2 { font-size: 19px; margin: 0; letter-spacing: -.01em; }
-  .sec-head p { margin: 0; color: var(--muted); font-size: 13px; }
-
-  .chart-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .chart-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
-  .chart-head .t { font-weight: 650; font-size: 13.5px; }
+  .chart-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+  .chart-head .t { font-weight: 650; font-size: 14px; }
   .chart-head .t small { color: var(--muted); font-weight: 500; }
-  .splits { color: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  .splits { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .toggles { display: inline-flex; gap: 4px; background: #0e1521; border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
+  .toggles button {
+    appearance: none; border: 0; background: transparent; color: var(--muted);
+    font: inherit; font-size: 12px; padding: 5px 11px; border-radius: 7px; cursor: pointer;
+  }
+  .toggles button[aria-pressed="true"] { background: #22304a; color: var(--ink); }
+  button.link {
+    appearance: none; border: 1px solid var(--line); background: #0e1521; color: var(--muted);
+    font: inherit; font-size: 12px; padding: 5px 10px; border-radius: 8px; cursor: pointer;
+  }
+  button.link:hover { color: var(--ink); }
+  button.link:disabled { opacity: .4; cursor: default; }
+
+  .chart-host { position: relative; }
   svg { display: block; width: 100%; height: auto; overflow: visible; }
   .legend { display: flex; gap: 16px; align-items: center; color: var(--muted); font-size: 12px; margin-top: 10px; flex-wrap: wrap; }
-  .legend .sw { width: 12px; height: 3px; border-radius: 2px; display: inline-block; margin-right: 6px; vertical-align: 3px; }
   .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: -1px; }
+  .tip {
+    position: absolute; pointer-events: none; z-index: 5;
+    background: #0b1220; border: 1px solid #33445f; border-radius: 8px; padding: 6px 9px;
+    font-size: 11.5px; color: var(--ink); white-space: nowrap; opacity: 0; transition: opacity .1s;
+    box-shadow: 0 6px 20px rgba(0,0,0,.45); transform: translate(-50%, -130%);
+  }
 
-  .split { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
-  .split > .card { display: flex; flex-direction: column; }
+  /* game log */
+  .log-wrap { max-height: 520px; overflow: auto; margin: -4px -6px 0; padding: 4px 6px 0; }
+  table.log { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+  table.log th {
+    position: sticky; top: 0; background: var(--panel); text-align: right; color: var(--muted);
+    font-size: 10.5px; text-transform: uppercase; letter-spacing: .07em; font-weight: 600;
+    padding: 6px 5px; border-bottom: 1px solid var(--line); z-index: 2;
+  }
+  table.log th:first-child, table.log th:nth-child(2) { text-align: left; }
+  table.log td { text-align: right; padding: 6px 5px; font-size: 12.5px; border-bottom: 1px solid #1a2434; }
+  table.log td:first-child, table.log td:nth-child(2) { text-align: left; }
+  table.log tr.g { cursor: pointer; }
+  table.log tr.g:hover td { background: #1a2436; }
+  table.log tr.g[aria-selected="true"] td { background: #22304a; }
+  table.log .w { color: var(--make); font-weight: 700; }
+  table.log .l { color: var(--miss); font-weight: 700; }
+  table.log .opp { color: var(--ink); font-weight: 600; }
+  table.log .at { color: #6f7f97; margin-right: 4px; }
 
   /* shot diet */
   .rows { display: grid; gap: 14px; }
@@ -93,65 +127,81 @@
   .bars { display: grid; gap: 3px; }
   .bar-line { display: flex; align-items: center; gap: 8px; }
   .bar-line .fill { height: 8px; border-radius: 3px; min-width: 2px; }
-  .bar-line .tag { font-size: 10px; color: #6f7f97; width: 46px; flex: 0 0 46px; font-variant-numeric: tabular-nums; }
+  .bar-line .tag { font-size: 10px; color: #6f7f97; width: 58px; flex: 0 0 58px; font-variant-numeric: tabular-nums; }
 
   /* radar */
   .radar-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
   .radar-axis { font-size: 11px; fill: var(--muted); }
   .radar-tick { font-size: 9px; fill: #55637a; }
-  .toggles { display: inline-flex; gap: 4px; background: #0e1521; border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
-  .toggles button {
-    appearance: none; border: 0; background: transparent; color: var(--muted);
-    font: inherit; font-size: 12px; padding: 5px 11px; border-radius: 7px; cursor: pointer;
-  }
-  .toggles button[aria-pressed="true"] { background: #22304a; color: var(--ink); }
   .radar-legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); flex-wrap: wrap; justify-content: center; }
   .radar-legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: 3px; }
 
   ul.findings { margin: 0; padding-left: 18px; display: grid; gap: 10px; }
   ul.findings li { color: #c8d4e6; }
   ul.findings b { color: var(--ink); }
+  .up { color: var(--make); }
+  .down { color: var(--miss); }
 
-  footer { margin-top: 34px; border-top: 1px solid var(--line); padding-top: 14px; color: var(--muted); font-size: 12px; }
+  section { margin-top: 16px; }
+  .sec-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 6px 0 12px; }
+  .sec-head h2 { font-size: 18px; margin: 0; letter-spacing: -.01em; }
+  .sec-head p { margin: 0; color: var(--muted); font-size: 12.5px; }
+  .meta { color: var(--muted); font-size: 12.5px; margin: 0 0 14px; }
+
+  footer { margin-top: 26px; border-top: 1px solid var(--line); padding-top: 14px; color: var(--muted); font-size: 12px; }
   footer p { margin: 0 0 6px; }
   .src { color: #6f7f97; }
 
   @media (max-width: 1080px) {
-    .cards, .chart-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  }
-  @media (max-width: 760px) {
-    .cards, .chart-grid, .split { grid-template-columns: 1fr; }
+    .split-main, .split-even { grid-template-columns: 1fr; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
-    <div class="kicker">Shot profile comparison · first game of each season</div>
-    <h1><span id="heroName"></span>: three opening nights</h1>
+    <div class="kicker">Shot profile · every regular-season game</div>
+    <h1><span id="heroName"></span> <span class="dim" id="heroYears"></span></h1>
     <p class="sub" id="subline"></p>
     <div class="tabs" id="playerTabs" role="tablist" aria-label="Player"></div>
   </header>
 
-  <section class="grid cards" id="gameCards"></section>
+  <div class="bar">
+    <div class="pills" id="seasonPills" role="group" aria-label="Season"></div>
+    <div class="hint" id="loadState"></div>
+  </div>
 
-  <section>
-    <div class="sec-head">
-      <h2>Shot charts</h2>
-      <p>Every field-goal attempt, plotted from ESPN's shot coordinates. Hover a dot for the play.</p>
+  <section class="card kpis" id="kpiStrip"></section>
+
+  <section class="grid split-main">
+    <div class="card">
+      <div class="chart-head">
+        <div>
+          <div class="t" id="chartTitle"></div>
+          <div class="splits" id="chartSplits"></div>
+        </div>
+        <div class="toggles" id="colorToggle">
+          <button type="button" data-color="make" aria-pressed="true">Make / miss</button>
+          <button type="button" data-color="zone" aria-pressed="false">Shot zone</button>
+        </div>
+      </div>
+      <div class="chart-host" id="chartHost"><div class="tip" id="tip"></div></div>
+      <div class="legend" id="chartLegend"></div>
     </div>
-    <div class="grid chart-grid" id="charts"></div>
-    <div class="legend">
-      <span><i class="dot" style="background:var(--make)"></i>Made</span>
-      <span><i class="dot" style="background:var(--miss)"></i>Missed</span>
-      <span id="legendSeasons" style="margin-left:auto"></span>
+
+    <div class="card">
+      <div class="chart-head">
+        <div class="t">Game log <small id="logCount"></small></div>
+        <button type="button" class="link" id="clearGame">All games</button>
+      </div>
+      <div class="log-wrap"><table class="log" id="gameLog"></table></div>
     </div>
   </section>
 
-  <section class="grid split">
+  <section class="grid split-even">
     <div class="card">
-      <div class="sec-head" style="margin-bottom:4px"><h2>Shot diet by season</h2></div>
-      <p class="meta" style="margin:0 0 14px">
+      <div class="sec-head" style="margin-top:0"><h2>Shot diet by season</h2></div>
+      <p class="meta">
         Share of field-goal attempts by shot zone, one bar per season.
         Paint = inside 8&nbsp;ft (ESPN plots the release point, so rim attempts read as 4–7&nbsp;ft).
       </p>
@@ -159,14 +209,13 @@
     </div>
 
     <div class="card">
-      <div class="sec-head" style="margin-bottom:4px;justify-content:space-between">
-        <h2>Profile radar</h2>
+      <div class="chart-head">
+        <div><div class="t">Profile radar</div><div class="splits" id="radarHint"></div></div>
         <div class="toggles" id="dimToggle">
-          <button data-dim="zone" aria-pressed="true">Shot zone</button>
-          <button data-dim="style" aria-pressed="false">Shot style</button>
+          <button type="button" data-dim="zone" aria-pressed="true">Shot zone</button>
+          <button type="button" data-dim="style" aria-pressed="false">Shot style</button>
         </div>
       </div>
-      <p class="meta" style="margin:0 0 6px" id="radarHint"></p>
       <div class="radar-wrap">
         <svg id="radar" viewBox="0 0 440 400" role="img" aria-label="Radar chart comparing shot profile across seasons"></svg>
         <div class="radar-legend" id="radarLegend"></div>
@@ -174,11 +223,25 @@
     </div>
   </section>
 
-  <section>
-    <div class="sec-head">
-      <h2>What actually changed</h2>
-      <p>Computed from the three shot logs below.</p>
+  <section class="card">
+    <div class="chart-head">
+      <div>
+        <div class="t">Within-season trend</div>
+        <div class="splits" id="trendHint"></div>
+      </div>
+      <div class="toggles" id="metricToggle">
+        <button type="button" data-metric="threeRate" aria-pressed="true">3PA rate</button>
+        <button type="button" data-metric="paintRate" aria-pressed="false">Paint rate</button>
+        <button type="button" data-metric="avgDist" aria-pressed="false">Avg distance</button>
+        <button type="button" data-metric="pts" aria-pressed="false">Points</button>
+      </div>
     </div>
+    <svg id="trend" viewBox="0 0 900 260" role="img" aria-label="Rolling game-by-game trend by season"></svg>
+    <div class="legend" id="trendLegend"></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>What actually changed</h2><p>Computed from every charted shot in each season.</p></div>
     <div class="card"><ul class="findings" id="findings"></ul></div>
   </section>
 
@@ -189,29 +252,46 @@
   </footer>
 </div>
 
-<script src="data/meta.js"></script>
-<script src="data/ant.js"></script>
-<script src="data/luka.js"></script>
-<script src="data/lamelo.js"></script>
-<script src="data/sga.js"></script>
+<script src="data/index.js"></script>
 <script>
 (function () {
   "use strict";
 
-  // Each data file registers itself, so adding a player is one more <script> tag.
-  const meta = window.SHOT_DATA_META;
-  const players = window.SHOT_DATA_PLAYERS || [];
-  const D = meta && players.length
-    ? { generated: meta.generated, source: meta.source, seasons: meta.seasons, players }
-    : null;
-  if (!D) {
-    document.body.innerHTML = '<div class="wrap"><p>Shot data failed to load (data/meta.js and data/*.js).</p></div>';
+  const INDEX = window.SHOT_INDEX;
+  if (!INDEX) {
+    document.body.innerHTML =
+      '<div class="wrap"><p>Shot data failed to load (data/index.js).</p></div>';
     return;
   }
 
-  const ZONES = ["Paint", "Short mid", "Long mid", "Corner 3", "Above break 3"];
+  const ZONES = INDEX.zones;
+  const STYLES = INDEX.styles;
+  const SEASONS = INDEX.seasons;
   const COLORS = ["#6c9dff", "#a78bfa", "#ffa63d"];
-  const SEASONS = D.seasons;
+  const ZONE_COLORS = {
+    Paint: "#ff8a4c",
+    "Short mid": "#ffd166",
+    "Long mid": "#7ee2b8",
+    "Corner 3": "#6c9dff",
+    "Above break 3": "#b388ff",
+  };
+  const colorOf = (season) => COLORS[Math.max(0, SEASONS.indexOf(season)) % COLORS.length];
+
+  // Game tuple order, as written by scripts/build-data.mjs.
+  const G = { DATE: 0, OPP: 1, HOME: 2, RES: 3, SCORE: 4, MIN: 5, PTS: 6,
+    FGM: 7, FGA: 8, TPM: 9, TPA: 10, FTM: 11, FTA: 12, SHOTS: 13 };
+  // Shot tuple order.
+  const SH = { X: 0, Y: 1, MADE: 2, ZONE: 3, STYLE: 4, PERIOD: 5, DIST: 6 };
+
+  const state = {
+    player: INDEX.players[0].key,
+    season: SEASONS[SEASONS.length - 1],
+    game: null,
+    colorMode: "make",
+    dim: "zone",
+    metric: "threeRate",
+    token: 0,
+  };
 
   const el = (tag, attrs, kids) => {
     const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
@@ -219,38 +299,46 @@
     (kids || []).forEach((c) => n.appendChild(c));
     return n;
   };
-  const pct = (n, d) => (d ? Math.round((n / d) * 1000) / 10 : 0);
-  const signed = (v, unit) => (v > 0 ? "+" : "") + v.toFixed(1) + (unit || "");
-  const cls = (v) => (v >= 0 ? "up" : "down");
-  const num = (v, u) => `<span class="${cls(v)}">${signed(v, u)}</span>`;
-  const parseFg = (v) =>
-    typeof v === "string" && v.includes("-") ? v.split("-").map(Number) : [null, null];
+  const txt = (s) => document.createTextNode(s);
+  const pct = (v) => (v * 100).toFixed(1) + "%";
+  const pct0 = (v) => Math.round(v * 100) + "%";
+  const signedPts = (v) => (v > 0 ? "+" : "") + (v * 100).toFixed(1);
+  const numCls = (v) => (v >= 0 ? "up" : "down");
 
-  const activeGames = (p) => p.games.filter((g) => !g.missing);
+  const player = () => INDEX.players.find((p) => p.key === state.player) || INDEX.players[0];
+  const seasonAgg = (label) => player().seasons.find((s) => s.season === label) || null;
+  const allSeasons = () => player().seasons.slice().sort((a, b) => a.season.localeCompare(b.season));
+  const seasonData = (label) => {
+    const d = window.SHOTS && window.SHOTS[state.player + "|" + label];
+    return d && d.games && d.games.length ? d.games : null;
+  };
+  const nameOf = (g) => (g[G.HOME] ? "vs " : "at ") + (g[G.OPP] || "?");
 
-  function zoneStats(game) {
-    const out = {};
-    ZONES.forEach((z) => (out[z] = { att: 0, made: 0 }));
-    game.shots.forEach((s) => {
-      const z = out[s.zone] ? s.zone : "Long mid";
-      out[z].att++;
-      if (s.made) out[z].made++;
+  /* ---------- lazy season loading ---------- */
+
+  const pending = new Map();
+  function loadSeason(playerKey, label) {
+    const key = playerKey + "|" + label;
+    if (window.SHOTS && window.SHOTS[key]) return Promise.resolve(window.SHOTS[key]);
+    if (pending.has(key)) return pending.get(key);
+    const p = new Promise((resolve, reject) => {
+      const s = document.createElement("script");
+      s.src = "data/" + playerKey + "-" + label + ".js";
+      s.dataset.season = key;
+      s.onload = () =>
+        window.SHOTS && window.SHOTS[key]
+          ? resolve(window.SHOTS[key])
+          : reject(new Error("empty " + key));
+      s.onerror = () => reject(new Error("missing " + s.src));
+      document.head.appendChild(s);
     });
-    return out;
-  }
-  function styleStats(game) {
-    const out = {};
-    game.shots.forEach((s) => {
-      out[s.style] = out[s.style] || { att: 0, made: 0 };
-      out[s.style].att++;
-      if (s.made) out[s.style].made++;
-    });
-    return out;
+    pending.set(key, p);
+    return p;
   }
 
-  /* ---------- court + chart ---------- */
+  /* ---------- court ---------- */
 
-  const PAD = 12, SCALE = 9, COURT_W = 50, COURT_D = 47;
+  const PAD = 12, SCALE = 10, COURT_W = 50, COURT_D = 47;
   const VW = COURT_W * SCALE + PAD * 2;
   const VH = COURT_D * SCALE + PAD * 2;
   const fx = (x) => PAD + x * SCALE;
@@ -258,19 +346,18 @@
 
   function arcPoints(cx, cy, r, from, to, steps) {
     const pts = [];
-    for (let i = 0; i <= (steps || 60); i++) {
-      const a = from + ((to - from) * i) / (steps || 60);
+    for (let i = 0; i <= steps; i++) {
+      const a = from + ((to - from) * i) / steps;
       pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
     }
     return pts;
   }
   function polyline(pts, attrs) {
     return el("polyline", Object.assign({
-      points: pts.map(([x, y]) => `${fx(x).toFixed(1)},${fy(y).toFixed(1)}`).join(" "),
+      points: pts.map(([x, y]) => fx(x).toFixed(1) + "," + fy(y).toFixed(1)).join(" "),
       fill: "none",
     }, attrs));
   }
-
   function courtBase() {
     const g = el("g", {});
     g.appendChild(el("rect", { x: fx(0), y: fy(COURT_D), width: COURT_W * SCALE, height: COURT_D * SCALE, fill: "#0d1623" }));
@@ -287,54 +374,278 @@
     return g;
   }
 
-  function drawChart(game) {
-    const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": `Shot chart ${game.season}` });
+  /* ---------- shot chart ---------- */
+
+  const tip = () => document.getElementById("tip");
+
+  function drawChart(shots, game) {
+    const host = document.getElementById("chartHost");
+    [...host.querySelectorAll("svg")].forEach((s) => s.remove());
+
+    const svg = el("svg", { viewBox: "0 0 " + VW + " " + VH, role: "img",
+      "aria-label": "Shot chart, " + shots.length + " attempts" });
     svg.appendChild(courtBase());
+
+    const n = shots.length;
+    const r = n > 900 ? 2.5 : n > 300 ? 3.1 : n > 60 ? 4.0 : 5.4;
     const layer = el("g", {});
-    game.shots.slice().sort((a, b) => Number(a.made) - Number(b.made)).forEach((s) => {
+    const points = [];
+    const byZone = state.colorMode === "zone";
+
+    const ordered = shots.slice().sort((a, b) => a[SH.MADE] - b[SH.MADE]);
+    for (const s of ordered) {
+      const cx = fx(s[SH.X]);
+      const cy = fy(Math.max(s[SH.Y], 0.5));
+      const made = s[SH.MADE] === 1;
+      const fill = byZone ? ZONE_COLORS[ZONES[s[SH.ZONE]]] || "#888" : made ? "rgba(53,211,153,.85)" : "rgba(255,95,109,.30)";
       layer.appendChild(el("circle", {
-        cx: fx(s.x), cy: fy(Math.max(s.y, 0.5)), r: 5.6,
-        fill: s.made ? "rgba(53,211,153,.92)" : "rgba(255,95,109,.28)",
-        stroke: s.made ? "#0a1a14" : "rgba(255,95,109,.95)",
-        "stroke-width": s.made ? 1 : 1.2,
-      }, [el("title", {}, [document.createTextNode(
-        `${s.text} · ${s.dist} ft · ${s.zone}${s.period ? ` · Q${s.period}` : ""}`
-      )])]));
-    });
+        class: "shot",
+        cx: cx.toFixed(1), cy: cy.toFixed(1), r: byZone ? r : made ? r * 1.15 : r,
+        fill,
+        stroke: byZone ? "rgba(0,0,0,.35)" : made ? "none" : "rgba(255,95,109,.85)",
+        "stroke-width": 0.7,
+      }));
+      points.push({ cx, cy, s });
+    }
     svg.appendChild(layer);
-    return svg;
+
+    const t = tip();
+    svg.addEventListener("mousemove", (e) => {
+      const rect = svg.getBoundingClientRect();
+      const px = ((e.clientX - rect.left) * VW) / rect.width;
+      const py = ((e.clientY - rect.top) * VH) / rect.height;
+      let best = null, bd = Math.max(10, r * 2.4);
+      for (const p of points) {
+        const d = Math.hypot(p.cx - px, p.cy - py);
+        if (d < bd) { bd = d; best = p; }
+      }
+      if (!best) { t.style.opacity = 0; return; }
+      const s = best.s;
+      t.innerHTML =
+        "<b>" + (s[SH.MADE] ? "Made" : "Missed") + "</b> " + (s[SH.ZONE] >= 3 ? "3" : "2") + " · " +
+        s[SH.DIST].toFixed(1) + " ft<br>" + ZONES[s[SH.ZONE]] + " · " + STYLES[s[SH.STYLE]] +
+        (game ? " · " + nameOf(game) + " " + game[G.DATE] : "");
+      const box = host.getBoundingClientRect();
+      t.style.left = (e.clientX - box.left) + "px";
+      t.style.top = (e.clientY - box.top) + "px";
+      t.style.opacity = 1;
+    });
+    svg.addEventListener("mouseleave", () => (t.style.opacity = 0));
+
+    host.appendChild(svg);
+
+    const legend = document.getElementById("chartLegend");
+    legend.innerHTML = byZone
+      ? ZONES.map((z) => '<span><i class="dot" style="background:' + ZONE_COLORS[z] + '"></i>' + z + "</span>").join("")
+      : '<span><i class="dot" style="background:var(--make)"></i>Made</span>' +
+        '<span><i class="dot" style="background:rgba(255,95,109,.5)"></i>Missed</span>' +
+        '<span style="margin-left:auto">hoop at the bottom · half court to the top</span>';
+  }
+
+  /* ---------- season stats ---------- */
+
+  function statsForSeason(agg) {
+    if (!agg) return null;
+    return {
+      label: agg.season + " season" + (agg.team ? " · " + agg.team : ""),
+      gp: agg.gp,
+      mpg: agg.gp ? agg.min / agg.gp : 0,
+      ppg: agg.gp ? agg.pts / agg.gp : 0,
+      fga: agg.chartedFga,
+      fgapg: agg.gp ? agg.chartedFga / agg.gp : 0,
+      fg: agg.efg,
+      fgPct: agg.fgPct,
+      threeRate: agg.threeRate,
+      paintRate: agg.paintRate,
+      avgDist: agg.avgDist,
+      charted: agg.chartedFga,
+      official: agg.fga,
+    };
+  }
+
+  function statsForGame(g) {
+    const shots = g[G.SHOTS];
+    const fga = shots.length || 1;
+    const fgm = shots.filter((s) => s[SH.MADE]).length;
+    const tpa = shots.filter((s) => s[SH.ZONE] >= 3).length;
+    const tpm = shots.filter((s) => s[SH.ZONE] >= 3 && s[SH.MADE]).length;
+    const distSum = shots.reduce((a, s) => a + s[SH.DIST], 0);
+    return {
+      label: g[G.DATE] + " " + nameOf(g),
+      gp: 1,
+      mpg: g[G.MIN],
+      ppg: g[G.PTS],
+      fga: shots.length,
+      fgapg: shots.length,
+      fg: fga ? (fgm + 0.5 * tpm) / fga : 0,
+      fgPct: g[G.FGA] ? g[G.FGM] / g[G.FGA] : 0,
+      threeRate: fga ? tpa / fga : 0,
+      paintRate: fga ? shots.filter((s) => s[SH.ZONE] === 0).length / fga : 0,
+      avgDist: fga ? distSum / fga : 0,
+      charted: shots.length,
+      official: g[G.FGA],
+    };
+  }
+
+  function renderKpis() {
+    const host = document.getElementById("kpiStrip");
+    const games = seasonData(state.season) || [];
+    const g = state.game != null ? games[state.game] : null;
+    const s = g ? statsForGame(g) : statsForSeason(seasonAgg(state.season));
+    if (!s) { host.innerHTML = '<div class="hint">No data for this season.</div>'; return; }
+
+    const cells = [
+      [s.gp, g ? "game" : "games"],
+      [s.mpg.toFixed(1), "min / g"],
+      [s.ppg.toFixed(1), "pts / g"],
+      [s.fgapg.toFixed(1), "FGA / g"],
+      [pct(s.fgPct), "FG %"],
+      [pct0(s.threeRate), "3PA rate"],
+      [pct(s.fg), "eFG %"],
+      [s.avgDist.toFixed(1) + '<small> ft</small>', "avg shot"],
+      [pct0(s.paintRate), "paint rate"],
+      [s.charted + '<small> / ' + s.official + "</small>", "charted / official"],
+    ];
+    host.innerHTML =
+      '<div class="kpi" style="flex:1 1 100%;margin-bottom:4px"><div class="k">' +
+      (g ? "Selected game" : "Season") + "</div><div style=\"font-size:13.5px;font-weight:650\">" +
+      s.label + "</div></div>" +
+      cells.map(([v, k]) => '<div class="kpi"><div class="v">' + v + '</div><div class="k">' + k + "</div></div>").join("");
+  }
+
+  /* ---------- chart + log ---------- */
+
+  function renderChart() {
+    const games = seasonData(state.season);
+    const game = games && state.game != null ? games[state.game] : null;
+    const shots = game ? game[G.SHOTS] : (games || []).flatMap((x) => x[G.SHOTS]);
+    const title = document.getElementById("chartTitle");
+    const splits = document.getElementById("chartSplits");
+
+    if (!games) {
+      title.textContent = state.season + " — not loaded";
+      splits.textContent = "data/" + state.player + "-" + state.season + ".js";
+      const host = document.getElementById("chartHost");
+      [...host.querySelectorAll("svg")].forEach((s) => s.remove());
+      return;
+    }
+
+    if (game) {
+      const fga = shots.length, fgm = shots.filter((s) => s[SH.MADE]).length;
+      const tpa = shots.filter((s) => s[SH.ZONE] >= 3).length;
+      const tpm = shots.filter((s) => s[SH.ZONE] >= 3 && s[SH.MADE]).length;
+      title.innerHTML = "<span style=\"color:" + colorOf(state.season) + "\">" + nameOf(game) + "</span> " +
+        '<small>' + game[G.DATE] + " · " + (game[G.SCORE] || "") + "</small>";
+      splits.textContent = fgm + "-" + fga + " charted FG · " + tpm + "-" + tpa + " 3P · " +
+        (game[G.FGM] + "-" + game[G.FGA]) + " official";
+    } else {
+      title.innerHTML = state.season + " season <small>· " + games.length + " games</small>";
+      const fgm = shots.filter((s) => s[SH.MADE]).length;
+      const tpa = shots.filter((s) => s[SH.ZONE] >= 3).length;
+      const tpm = shots.filter((s) => s[SH.ZONE] >= 3 && s[SH.MADE]).length;
+      splits.textContent = fgm + "-" + shots.length + " charted FG · " + tpm + "-" + tpa + " 3P · hover any dot";
+    }
+    drawChart(shots, game);
+    document.getElementById("clearGame").disabled = !game;
+  }
+
+  function renderLog() {
+    const table = document.getElementById("gameLog");
+    const games = seasonData(state.season);
+    const count = document.getElementById("logCount");
+    if (!games) {
+      table.innerHTML = "";
+      count.textContent = "";
+      return;
+    }
+    count.textContent = "· " + games.length + " games";
+    const head =
+      "<thead><tr><th>Date</th><th>Opp</th><th>W/L</th><th>Min</th><th>Pts</th><th>FG</th><th>3P</th><th>Att</th></tr></thead>";
+    const rows = games
+      .map((g, i) => {
+        const res = g[G.RES] === "W" ? '<span class="w">W</span>' : g[G.RES] === "L" ? '<span class="l">L</span>' : "–";
+        return (
+          '<tr class="g" data-i="' + i + '" aria-selected="' + (state.game === i) + '">' +
+          "<td>" + g[G.DATE].slice(5) + "</td>" +
+          '<td><span class="at">' + (g[G.HOME] ? "vs" : "at") + '</span><span class="opp">' + (g[G.OPP] || "?") + "</span></td>" +
+          "<td>" + res + "</td>" +
+          "<td>" + g[G.MIN] + "</td>" +
+          "<td><b>" + g[G.PTS] + "</b></td>" +
+          "<td>" + g[G.FGM] + "-" + g[G.FGA] + "</td>" +
+          "<td>" + g[G.TPM] + "-" + g[G.TPA] + "</td>" +
+          "<td>" + g[G.SHOTS].length + "</td>" +
+          "</tr>"
+        );
+      })
+      .join("");
+    table.innerHTML = head + "<tbody>" + rows + "</tbody>";
+  }
+
+  /* ---------- diet ---------- */
+
+  function renderDiet() {
+    const host = document.getElementById("diet");
+    const seasons = allSeasons().filter((s) => s.chartedFga);
+    if (!seasons.length) { host.innerHTML = '<div class="hint">No data.</div>'; return; }
+
+    const share = (agg, z) => (agg.chartedFga ? agg.zones[z][0] / agg.chartedFga : 0);
+    const maxShare = Math.max(0.01, ...ZONES.flatMap((z) => seasons.map((s) => share(s, z))));
+
+    host.innerHTML = ZONES.map((z) => {
+      const seq = seasons
+        .map((s) => '<b style="color:' + colorOf(s.season) + '">' + pct0(share(s, z)) + "</b>")
+        .join(" → ");
+      const bars = seasons
+        .map((s) => {
+          const att = s.zones[z][0], made = s.zones[z][1];
+          const w = (share(s, z) / maxShare) * 100;
+          return (
+            '<div class="bar-line" title="' + s.season + " " + z + ": " + made + "-" + att +
+            " (" + pct0(share(s, z)) + ' of attempts)">' +
+            '<span class="tag">' + s.season.slice(2) + "&nbsp;" + made + "-" + att + "</span>" +
+            '<span class="fill" style="width:' + w.toFixed(1) + "%;background:" + colorOf(s.season) + '"></span>' +
+            "</div>"
+          );
+        })
+        .join("");
+      return '<div class="row"><div class="head"><span class="z">' + z +
+        '</span><span class="seq">' + seq + ' <span style="color:#55637a">of attempts</span></span></div>' +
+        '<div class="bars">' + bars + "</div></div>";
+    }).join("");
   }
 
   /* ---------- radar ---------- */
 
   const RADAR = { cx: 220, cy: 196, r: 118 };
-  let dim = "zone";
 
-  function drawRadar(games, zs, ss) {
+  function radarAxes(seasons) {
+    if (state.dim === "zone") return ZONES.slice();
+    const totals = {};
+    seasons.forEach((s) => Object.keys(s.styles).forEach((k) => (totals[k] = (totals[k] || 0) + s.styles[k][0])));
+    return Object.keys(totals)
+      .filter((k) => totals[k] > 0)
+      .sort((a, b) => totals[b] - totals[a])
+      .slice(0, 7);
+  }
+
+  function renderRadar() {
     const svg = document.getElementById("radar");
     svg.innerHTML = "";
+    const seasons = allSeasons().filter((s) => s.chartedFga);
+    if (!seasons.length) return;
 
-    const axes = dim === "zone" ? ZONES.slice() : (function () {
-      const all = {};
-      games.forEach((g) => Object.keys(ss[g.season]).forEach((k) => (all[k] = 1)));
-      return Object.keys(all).sort((a, b) => {
-        const sum = (k) => games.reduce((n, g) => n + (ss[g.season][k]?.att || 0), 0);
-        return sum(b) - sum(a);
-      });
-    })();
-
-    const series = games.map((g, i) => {
-      const total = g.shots.length || 1;
-      const src = dim === "zone" ? zs[g.season] : ss[g.season];
+    const axes = radarAxes(seasons);
+    const n = axes.length || 1;
+    const series = seasons.map((s) => {
+      const src = state.dim === "zone" ? s.zones : s.styles;
       return {
-        season: g.season,
-        color: COLORS[i % COLORS.length],
-        values: axes.map((a) => (src[a]?.att || 0) / total),
+        season: s.season,
+        color: colorOf(s.season),
+        values: axes.map((a) => (src[a] ? src[a][0] / s.chartedFga : 0)),
       };
     });
 
-    const n = axes.length || 1;
-    const max = Math.max(0.08, ...series.flatMap((s) => s.values)) * 1.08;
+    const max = Math.max(0.08, ...series.flatMap((s) => s.values)) * 1.1;
     const pt = (i, v) => {
       const a = -Math.PI / 2 + (i * 2 * Math.PI) / n;
       const rr = (v / max) * RADAR.r;
@@ -351,11 +662,11 @@
       const [x, y] = pt(i, max);
       svg.appendChild(el("line", { x1: RADAR.cx, y1: RADAR.cy, x2: x.toFixed(1), y2: y.toFixed(1), stroke: "#1e2a3d", "stroke-width": 1 }));
       const a = -Math.PI / 2 + (i * 2 * Math.PI) / n;
-      const lx = RADAR.cx + (RADAR.r + 24) * Math.cos(a);
-      const ly = RADAR.cy + (RADAR.r + 24) * Math.sin(a);
+      const lx = RADAR.cx + (RADAR.r + 26) * Math.cos(a);
+      const ly = RADAR.cy + (RADAR.r + 26) * Math.sin(a);
       const anchor = Math.abs(Math.cos(a)) < 0.25 ? "middle" : Math.cos(a) > 0 ? "start" : "end";
       const t = el("text", { x: lx.toFixed(1), y: ly.toFixed(1), "text-anchor": anchor, class: "radar-axis" });
-      t.textContent = ax;
+      t.appendChild(txt(ax));
       svg.appendChild(t);
     });
 
@@ -367,206 +678,305 @@
       }));
       pts.forEach(([x, y], i) => {
         svg.appendChild(el("circle", { cx: x.toFixed(1), cy: y.toFixed(1), r: 3.2, fill: s.color }, [
-          el("title", {}, [document.createTextNode(`${s.season} · ${axes[i]}: ${(s.values[i] * 100).toFixed(1)}% of attempts`)]),
+          el("title", {}, [txt(s.season + " · " + axes[i] + ": " + (s.values[i] * 100).toFixed(1) + "% of attempts")]),
         ]));
       });
     });
 
-    svg.appendChild(el("text", { x: 8, y: 14, class: "radar-tick" }, [document.createTextNode(`Max ${(max * 100).toFixed(0)}% of attempts`)]));
+    svg.appendChild(el("text", { x: 8, y: 14, class: "radar-tick" }, [
+      txt("Max " + (max * 100).toFixed(0) + "% of attempts"),
+    ]));
 
-    document.getElementById("radarHint").textContent = dim === "zone"
-      ? "Share of field-goal attempts by zone, same axes for every season."
-      : "Share of attempts by shot style, read from the play-by-play text.";
-
+    document.getElementById("radarHint").textContent =
+      state.dim === "zone" ? "Share of attempts by zone" : "Share of attempts by shot style";
     document.getElementById("radarLegend").innerHTML = series
-      .map((s) => `<span><i style="background:${s.color}"></i>${s.season}</span>`)
+      .map((s) => '<span><i style="background:' + s.color + '"></i>' + s.season + "</span>")
       .join("");
   }
 
-  /* ---------- render ---------- */
+  /* ---------- trend ---------- */
 
-  let currentKey = D.players[0].key;
+  const METRICS = {
+    threeRate: { label: "3PA rate", fmt: (v) => Math.round(v * 100) + "%", get: (g) => (g[G.FGA] ? g[G.TPA] / g[G.FGA] : 0) },
+    paintRate: { label: "Paint rate", fmt: (v) => Math.round(v * 100) + "%", get: (g) => {
+      const n = g[G.SHOTS].length || 1;
+      return g[G.SHOTS].filter((s) => s[SH.ZONE] === 0).length / n;
+    } },
+    avgDist: { label: "Avg shot distance", fmt: (v) => v.toFixed(1) + " ft", get: (g) => {
+      const n = g[G.SHOTS].length || 1;
+      return g[G.SHOTS].reduce((a, s) => a + s[SH.DIST], 0) / n;
+    } },
+    pts: { label: "Points", fmt: (v) => Math.round(v), get: (g) => g[G.PTS] },
+  };
 
-  function render(key) {
-    const p = D.players.find((x) => x.key === key) || D.players[0];
-    currentKey = p.key;
-    const games = activeGames(p);
-    const all = p.games;
+  function rolling(vals, w) {
+    const out = [];
+    let sum = 0;
+    for (let i = 0; i < vals.length; i++) {
+      sum += vals[i];
+      if (i >= w) sum -= vals[i - w];
+      out.push(sum / Math.min(i + 1, w));
+    }
+    return out;
+  }
+
+  function renderTrend() {
+    const svg = document.getElementById("trend");
+    svg.innerHTML = "";
+    const W = 900, H = 260, L = 46, R = 18, T = 14, B = 30;
+    const m = METRICS[state.metric];
+
+    const series = allSeasons()
+      .map((agg) => ({ agg, games: seasonData(agg.season) }))
+      .filter((s) => s.games && s.games.length >= 2);
+    if (!series.length) {
+      document.getElementById("trendHint").textContent = "Needs at least two games in a season.";
+      return;
+    }
+
+    const lines = series.map((s) => ({
+      season: s.agg.season,
+      color: colorOf(s.agg.season),
+      values: rolling(s.games.map(m.get), 5),
+    }));
+    const maxN = Math.max(...lines.map((l) => l.values.length));
+    const all = lines.flatMap((l) => l.values);
+    const lo = Math.min(...all), hi = Math.max(...all);
+    const pad = (hi - lo) * 0.15 || 0.1;
+    const yMin = state.metric === "pts" || state.metric === "avgDist" ? 0 : Math.max(0, lo - pad);
+    const yMax = hi + pad;
+
+    const X = (i) => L + (maxN <= 1 ? 0 : (i / (maxN - 1)) * (W - L - R));
+    const Y = (v) => T + (1 - (v - yMin) / (yMax - yMin || 1)) * (H - T - B);
+
+    for (let k = 0; k <= 3; k++) {
+      const v = yMin + ((yMax - yMin) * k) / 3;
+      svg.appendChild(el("line", { x1: L, y1: Y(v), x2: W - R, y2: Y(v), stroke: "#1b2637", "stroke-width": 1 }));
+      const t = el("text", { x: L - 8, y: Y(v) + 3, "text-anchor": "end", class: "radar-tick" });
+      t.appendChild(txt(m.fmt(v)));
+      svg.appendChild(t);
+    }
+    [1, Math.round(maxN / 2), maxN].forEach((n) => {
+      const t = el("text", { x: X(n - 1), y: H - 8, "text-anchor": "middle", class: "radar-tick" });
+      t.appendChild(txt("G" + n));
+      svg.appendChild(t);
+    });
+
+    lines.forEach((l) => {
+      const d = l.values.map((v, i) => (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(v).toFixed(1)).join(" ");
+      svg.appendChild(el("path", { d, fill: "none", stroke: l.color, "stroke-width": 2, "stroke-linejoin": "round" }));
+      const last = l.values[l.values.length - 1];
+      svg.appendChild(el("circle", { cx: X(l.values.length - 1), cy: Y(last), r: 3.4, fill: l.color }, [
+        el("title", {}, [txt(l.season + " · final rolling average " + m.fmt(last))]),
+      ]));
+    });
+
+    document.getElementById("trendHint").textContent =
+      "5-game rolling average · " + m.label.toLowerCase() + " · hover a season's last point";
+    document.getElementById("trendLegend").innerHTML = lines
+      .map((l) => '<span><i class="dot" style="background:' + l.color + '"></i>' + l.season + "</span>")
+      .join("");
+  }
+
+  /* ---------- findings ---------- */
+
+  function renderFindings() {
+    const host = document.getElementById("findings");
+    const seasons = allSeasons();
+    if (seasons.length < 2) {
+      host.innerHTML = "<li>Not enough seasons to compare.</li>";
+      return;
+    }
+    const first = seasons[0], last = seasons[seasons.length - 1];
+    const seq = (get, fmt) => seasons.map((s) => fmt(get(s))).join(" → ");
+    const diff = (get, fmt, unit) => {
+      const d = get(last) - get(first);
+      const shown = Math.abs(unit === "pts" ? d * 100 : d);
+      return '<span class="' + numCls(d) + '">' + (d > 0 ? "+" : "−") +
+        (unit === "pts" ? shown.toFixed(1) + " pts" : unit === "ft" ? shown.toFixed(1) + " ft" : shown.toFixed(2)) +
+        "</span>";
+    };
+    const mid = (s) => (s.zones["Short mid"][0] + s.zones["Long mid"][0]) / (s.chartedFga || 1);
+
+    const bullets = [
+      "<b>Three-point rate:</b> " + seq((s) => s.threeRate, pct0) + " of attempts (" +
+        diff((s) => s.threeRate, null, "pts") + " across the window).",
+      "<b>Paint rate:</b> " + seq((s) => s.paintRate, pct0) + ", " + diff((s) => s.paintRate, null, "pts") + ".",
+      "<b>Mid-range rate:</b> " + seq(mid, pct0) + ", " + diff(mid, null, "pts") + ".",
+      "<b>Efficiency:</b> " + seq((s) => s.efg, pct) + " eFG, " + diff((s) => s.efg, null, "pts") + ".",
+      "<b>Shot distance:</b> " + seq((s) => s.avgDist, (v) => v.toFixed(1) + " ft") + ", " + diff((s) => s.avgDist, null, "ft") + ".",
+      "<b>Volume:</b> " + seq((s) => s.chartedFga, (v) => v.toLocaleString()) + " charted attempts, " +
+        seq((s) => s.gp, (v) => v + " GP") + " (" +
+        seq((s) => s.chartedFga / (s.gp || 1), (v) => v.toFixed(1)) + " per game).",
+      "<b>Scoring:</b> " + seq((s) => s.pts / (s.gp || 1), (v) => v.toFixed(1)) + " points per game.",
+    ];
+    host.innerHTML = bullets.map((b) => "<li>" + b + "</li>").join("");
+  }
+
+  /* ---------- header / footer ---------- */
+
+  function renderHeader() {
+    const p = player();
+    const seasons = allSeasons();
+    const total = seasons.reduce((n, s) => n + s.chartedFga, 0);
+    const games = seasons.reduce((n, s) => n + s.gp, 0);
+
+    document.getElementById("heroName").textContent = p.name;
+    document.getElementById("heroYears").textContent =
+      "· " + seasons[0].season + " to " + seasons[seasons.length - 1].season;
+    document.getElementById("subline").innerHTML =
+      "<b>" + total.toLocaleString() + "</b> charted field-goal attempts across <b>" +
+      games + "</b> regular-season games — every shot ESPN recorded, plotted on the same half-court.";
 
     [...document.querySelectorAll("#playerTabs button")].forEach((b) =>
       b.setAttribute("aria-pressed", String(b.dataset.key === p.key))
     );
 
-    document.getElementById("heroName").textContent = p.name;
-    document.getElementById("subline").innerHTML = games.length
-      ? `First game of each season — ` +
-        games.map((g) => `<b>${g.season}</b> ${g.venue} on ${g.date} (${g.box.pts} pts)`).join(", ") +
-        `. Shot locations from ESPN play-by-play, plotted on identical half-courts.`
-      : "No chartable games found for this player.";
-
-    /* game cards */
-    const cardsHost = document.getElementById("gameCards");
-    cardsHost.innerHTML = "";
-    all.forEach((g, i) => {
-      const card = document.createElement("div");
-      card.className = "card";
-      if (g.missing) {
-        card.innerHTML = `<h2><span class="badge" style="background:#20293a;color:${COLORS[i]}">${g.season}</span></h2>
-          <div class="meta">No regular-season game on record.</div>`;
-        cardsHost.appendChild(card);
-        return;
-      }
-      const t = g.totals;
-      card.innerHTML = `
-        <h2><span class="badge" style="background:rgba(255,255,255,.06);color:${COLORS[i % COLORS.length]}">${g.season}</span>
-          &nbsp;${g.team} ${g.venue} <span style="color:var(--muted);font-weight:500">vs ${g.opponent}</span></h2>
-        <div class="meta">${g.date} · ${g.teamScore}–${g.oppScore} · first of ${g.seasonGames} games played</div>
-        <div class="line">
-          <div class="stat"><div class="v" style="color:${COLORS[i % COLORS.length]}">${g.box.pts ?? "–"}</div><div class="k">Points</div></div>
-          <div class="stat"><div class="v">${g.box.fg ?? "–"}</div><div class="k">FG</div></div>
-          <div class="stat"><div class="v">${g.box.three ?? "–"}</div><div class="k">3P</div></div>
-          <div class="stat"><div class="v">${g.box.ft ?? "–"}</div><div class="k">FT</div></div>
-          <div class="stat"><div class="v">${(t.efg * 100).toFixed(1)}%</div><div class="k">eFG</div></div>
-          <div class="stat"><div class="v">${t.avgDist.toFixed(1)}<span style="font-size:12px;color:var(--muted)"> ft</span></div><div class="k">Avg shot</div></div>
-        </div>
-        ${g.missedTeamOpener && g.teamOpener ? `<div class="note">Missed ${g.team}'s opener (${g.teamOpener.date} ${g.teamOpener.venue}). This is his first game played, ${g.seasonGames} total that season.</div>` : ""}`;
-      cardsHost.appendChild(card);
-    });
-
-    /* charts */
-    const chartsHost = document.getElementById("charts");
-    chartsHost.innerHTML = "";
-    all.forEach((g, i) => {
-      const card = document.createElement("div");
-      card.className = "card";
-      if (g.missing) {
-        card.innerHTML = `<div class="chart-head"><div class="t"><span class="badge" style="background:#20293a;color:${COLORS[i]}">${g.season}</span></div></div>
-          <div class="meta">No chartable game.</div>`;
-        chartsHost.appendChild(card);
-        return;
-      }
-      const t = g.totals;
-      card.innerHTML = `
-        <div class="chart-head">
-          <div class="t"><span class="badge" style="background:rgba(255,255,255,.06);color:${COLORS[i % COLORS.length]}">${g.season}</span>
-            &nbsp;${g.venue} <small>· ${g.date}</small></div>
-          <div class="splits">${t.chartedFgm}-${t.chartedFga} FG · ${t.tpm}-${t.tpa} 3P</div>
-        </div>`;
-      card.appendChild(drawChart(g));
-      chartsHost.appendChild(card);
-    });
-    document.getElementById("legendSeasons").textContent =
-      `${games.reduce((n, g) => n + g.shots.length, 0)} charted attempts · hoops at the bottom, half-court to the top`;
-
-    /* shot diet */
-    const zs = {}, ss = {};
-    games.forEach((g) => { zs[g.season] = zoneStats(g); ss[g.season] = styleStats(g); });
-
-    const dietHost = document.getElementById("diet");
-    dietHost.innerHTML = "";
-    const shareOf = (g, z) => (g.shots.length ? zs[g.season][z].att / g.shots.length : 0);
-    const maxShare = Math.max(0.01, ...ZONES.flatMap((z) => games.map((g) => shareOf(g, z))));
-
-    ZONES.forEach((z) => {
-      const row = document.createElement("div");
-      row.className = "row";
-      const seq = games.map((g, i) => {
-        const s = zs[g.season][z];
-        return `<b style="color:${COLORS[i % COLORS.length]}">${(shareOf(g, z) * 100).toFixed(0)}%</b>`;
-      }).join(" → ");
-      row.innerHTML = `
-        <div class="head">
-          <span class="z">${z}</span>
-          <span class="seq">${seq} <span style="color:#55637a">of attempts</span></span>
-        </div>
-        <div class="bars">
-          ${games.map((g, i) => {
-            const s = zs[g.season][z];
-            const w = (shareOf(g, z) / maxShare) * 100;
-            return `<div class="bar-line" title="${g.season} ${z}: ${s.made}/${s.att} (${(shareOf(g, z) * 100).toFixed(0)}% of attempts)">
-              <span class="tag">${g.season.slice(2)}&nbsp;${s.made}-${s.att}</span>
-              <span class="fill" style="width:${w.toFixed(1)}%;background:${COLORS[i % COLORS.length]}"></span>
-            </div>`;
-          }).join("")}
-        </div>`;
-      dietHost.appendChild(row);
-    });
-
-    if (games.length) drawRadar(games, zs, ss);
-
-    /* findings */
-    const findingsHost = document.getElementById("findings");
-    findingsHost.innerHTML = "";
-    if (games.length >= 2) {
-      const a = games[0], z = games[games.length - 1];
-      const tA = a.totals, tZ = z.totals;
-      const seqOf = (pick) => games.map((g) => `${(pick(g) * 100).toFixed(0)}%`).join(" → ");
-
-      const midOf = (g) => (zs[g.season]["Short mid"].att + zs[g.season]["Long mid"].att) / (g.shots.length || 1);
-      const bullets = [
-        `<b>Three-point rate:</b> ${seqOf((g) => g.totals.threeRate)} of attempts, ${num((tZ.threeRate - tA.threeRate) * 100, " pts")} from ${a.season} to ${z.season}.`,
-        `<b>Paint rate:</b> ${seqOf((g) => g.totals.paintRate)}, ${num((tZ.paintRate - tA.paintRate) * 100, " pts")} across the three seasons.`,
-        `<b>Mid-range rate:</b> ${seqOf(midOf)}, ${num((midOf(z) - midOf(a)) * 100, " pts")}.`,
-        `<b>Efficiency:</b> ${seqOf((g) => g.totals.efg)} eFG, ${num((tZ.efg - tA.efg) * 100, " pts")} from ${a.season} to ${z.season}.`,
-        `<b>Shot distance:</b> ${games.map((g) => g.totals.avgDist.toFixed(1) + " ft").join(" → ")}, ${num(tZ.avgDist - tA.avgDist, " ft")}.`,
-        `<b>Volume:</b> ${games.map((g) => `${g.totals.chartedFga} FGA`).join(" → ")}, ${num(tZ.chartedFga - tA.chartedFga, "")} attempts.`,
-        `<b>Scoring:</b> ${games.map((g) => `${g.box.pts} pts (${g.box.fg} FG, ${g.box.three} 3P)`).join("; ")}.`,
-      ];
-      findingsHost.innerHTML = bullets.map((b) => `<li>${b}</li>`).join("");
-    } else {
-      findingsHost.innerHTML = "<li>Not enough games to compare.</li>";
-    }
-
-    /* footer */
-    document.getElementById("srcLine").textContent = games.length
-      ? `${p.name} — ${games.map((g) => `${g.season}: ${g.team} ${g.venue} on ${g.date}, ${g.box.pts} pts (${g.box.fg} FG, ${g.box.three} 3P, ${g.box.ft} FT)`).join(" | ")}`
-      : `${p.name} — no games.`;
-
-    const caveats = [];
-    games.forEach((g) => {
-      const [bm, ba] = parseFg(g.box.fg);
-      if (Number.isFinite(ba) && ba !== g.totals.chartedFga) {
-        caveats.push(`${g.season}: ESPN's play feed lists ${g.totals.chartedFga} attempts against the official box's ${ba}, so the chart header and the stat card differ by ${Math.abs(g.totals.chartedFga - ba)} attempt(s).`);
-      }
-      if (g.missedTeamOpener && g.teamOpener) {
-        caveats.push(`${g.season}: not opening night for the team — ${g.team} opened on ${g.teamOpener.date} (${g.teamOpener.venue}) and he first appeared on ${g.date}; he played ${g.seasonGames} game${g.seasonGames === 1 ? "" : "s"} that season.`);
-      }
-    });
-    document.getElementById("srcCaveats").textContent = caveats.length
-      ? "Caveats: " + caveats.join(" ")
-      : "";
-
-    document.getElementById("srcNote").textContent =
-      `Source: ${D.source} Charted attempts: ${games.map((g) => `${g.season} ${g.totals.chartedFga}`).join(", ")}. Built ${D.generated.slice(0, 10)}.`;
+    const pills = document.getElementById("seasonPills");
+    pills.innerHTML = '<span class="lab">Season</span>' + seasons
+      .map((s) => {
+        const live = s.gp <= 10 && s.season === SEASONS[SEASONS.length - 1];
+        return '<button type="button" data-season="' + s.season + '" aria-pressed="' + (s.season === state.season) + '">' +
+          s.season + '<span class="n">' + (live ? s.gp + " GP so far" : s.gp + " GP") + "</span></button>";
+      })
+      .join("");
   }
 
-  /* ---------- player tabs ---------- */
+  function renderFooter() {
+    const p = player();
+    const seasons = allSeasons().filter((s) => s.chartedFga);
+    const caveats = seasons
+      .filter((s) => s.chartedFga !== s.fga)
+      .map((s) => {
+        const d = s.chartedFga - s.fga;
+        return s.season + ": " + s.chartedFga.toLocaleString() + " charted attempts vs " +
+          s.fga.toLocaleString() + " official (" + (d > 0 ? "+" : "") + d + ").";
+      });
+    const dropped = seasons.filter((s) => s.skipped).map((s) => s.season + ": " + s.skipped);
+    document.getElementById("srcLine").textContent =
+      p.name + " — " + seasons.map((s) => s.season + ": " + s.gp + " GP, " + s.chartedFga.toLocaleString() + " charted attempts").join(" · ");
+    document.getElementById("srcNote").textContent =
+      "Source: " + INDEX.source + " Built " + INDEX.generated.slice(0, 10) + ".";
+    document.getElementById("srcCaveats").textContent =
+      (caveats.length ? "Play-by-play vs official box score: " + caveats.join(" ") + " " : "") +
+      (dropped.length ? "Attempts with no usable coordinate (excluded): " + dropped.join(", ") + "." : "");
+  }
 
-  const tabs = document.getElementById("playerTabs");
-  tabs.innerHTML = D.players
-    .map((p) => `<button type="button" role="tab" data-key="${p.key}" aria-pressed="false">${p.short}</button>`)
+  /* ---------- orchestration ---------- */
+
+  function renderStatic() {
+    renderHeader();
+    renderDiet();
+    renderRadar();
+    renderFindings();
+    renderFooter();
+  }
+
+  function renderDynamic() {
+    renderKpis();
+    renderChart();
+    renderLog();
+    renderTrend();
+  }
+
+  async function selectPlayer(key) {
+    state.player = key;
+    state.game = null;
+    const p = player();
+    const has = p.seasons.filter((s) => s.gp);
+    if (has.length && !has.some((s) => s.season === state.season)) state.season = has[has.length - 1].season;
+
+    const token = ++state.token;
+    renderStatic();
+    renderDynamic();
+
+    const missing = p.seasons.filter((s) => !s.gp).map((s) => s.season);
+    document.getElementById("loadState").textContent =
+      "Loading " + has.map((s) => s.season).join(", ") + "…";
+
+    const results = await Promise.all(
+      has.map((s) => loadSeason(p.key, s.season).catch(() => null))
+    );
+    if (token !== state.token) return;
+    const failed = results.filter((r) => !r).length;
+    document.getElementById("loadState").textContent = failed
+      ? failed + " season file(s) failed to load"
+      : has.length + " seasons loaded · " +
+        has.reduce((n, s) => n + s.chartedFga, 0).toLocaleString() + " shots" +
+        (missing.length ? " · no data for " + missing.join(", ") : "");
+    renderDynamic();
+  }
+
+  /* ---------- events ---------- */
+
+  document.getElementById("playerTabs").innerHTML = INDEX.players
+    .map((p) => '<button type="button" role="tab" data-key="' + p.key + '" aria-pressed="false">' + p.short + "</button>")
     .join("");
 
-  tabs.addEventListener("click", (e) => {
+  document.getElementById("playerTabs").addEventListener("click", (e) => {
     const b = e.target.closest("button");
-    if (b) render(b.dataset.key);
+    if (b) selectPlayer(b.dataset.key);
+  });
+
+  document.getElementById("seasonPills").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    state.season = b.dataset.season;
+    state.game = null;
+    renderHeader();
+    renderDynamic();
+  });
+
+  document.getElementById("gameLog").addEventListener("click", (e) => {
+    const tr = e.target.closest("tr.g");
+    if (!tr) return;
+    const i = Number(tr.dataset.i);
+    state.game = state.game === i ? null : i;
+    renderKpis();
+    renderChart();
+    [...document.querySelectorAll("#gameLog tr.g")].forEach((r) =>
+      r.setAttribute("aria-selected", String(Number(r.dataset.i) === state.game))
+    );
+  });
+
+  document.getElementById("clearGame").addEventListener("click", () => {
+    state.game = null;
+    renderKpis();
+    renderChart();
+    [...document.querySelectorAll("#gameLog tr.g")].forEach((r) => r.setAttribute("aria-selected", "false"));
+  });
+
+  document.getElementById("colorToggle").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    state.colorMode = b.dataset.color;
+    [...document.querySelectorAll("#colorToggle button")].forEach((x) =>
+      x.setAttribute("aria-pressed", String(x === b))
+    );
+    renderChart();
   });
 
   document.getElementById("dimToggle").addEventListener("click", (e) => {
     const b = e.target.closest("button");
     if (!b) return;
-    dim = b.dataset.dim;
+    state.dim = b.dataset.dim;
     [...document.querySelectorAll("#dimToggle button")].forEach((x) =>
       x.setAttribute("aria-pressed", String(x === b))
     );
-    const p = D.players.find((x) => x.key === currentKey);
-    const games = activeGames(p);
-    const zs = {}, ss = {};
-    games.forEach((g) => { zs[g.season] = zoneStats(g); ss[g.season] = styleStats(g); });
-    if (games.length) drawRadar(games, zs, ss);
+    renderRadar();
   });
 
-  render(D.players[0].key);
+  document.getElementById("metricToggle").addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    state.metric = b.dataset.metric;
+    [...document.querySelectorAll("#metricToggle button")].forEach((x) =>
+      x.setAttribute("aria-pressed", String(x === b))
+    );
+    renderTrend();
+  });
+
+  selectPlayer(INDEX.players[0].key);
 })();
 </script>
 </body>
