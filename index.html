@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Anthony Edwards — Opening Night Shot Profile</title>
+<title>NBA shot profiles — three opening nights</title>
 <style>
   :root {
     --bg: #0a0e17;
@@ -14,8 +14,9 @@
     --muted: #8b9bb4;
     --make: #35d399;
     --miss: #ff5f6d;
-    --last: #6c9dff;
-    --this: #ffa63d;
+    --s24: #6c9dff;
+    --s25: #a78bfa;
+    --s26: #ffa63d;
   }
   * { box-sizing: border-box; }
   body {
@@ -25,20 +26,28 @@
     font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     padding: 28px 20px 60px;
   }
-  .wrap { max-width: 1240px; margin: 0 auto; }
-  header.top { margin-bottom: 26px; }
+  .wrap { max-width: 1320px; margin: 0 auto; }
+  header.top { margin-bottom: 20px; }
   .kicker {
     text-transform: uppercase; letter-spacing: .16em; font-size: 11px;
     color: var(--muted); font-weight: 600; margin-bottom: 8px;
   }
   h1 { font-size: clamp(26px, 3.4vw, 40px); line-height: 1.1; margin: 0 0 8px; letter-spacing: -.02em; }
-  h1 span { color: var(--this); }
-  .sub { color: var(--muted); max-width: 78ch; margin: 0; }
+  h1 span { color: var(--s26); }
+  .sub { color: var(--muted); max-width: 86ch; margin: 0; }
   .sub b { color: var(--ink); font-weight: 600; }
 
+  .tabs { display: flex; gap: 6px; flex-wrap: wrap; margin: 20px 0 4px; }
+  .tabs button {
+    appearance: none; border: 1px solid var(--line); background: #0e1521; color: var(--muted);
+    font: inherit; font-size: 13.5px; font-weight: 600; padding: 8px 15px; border-radius: 10px; cursor: pointer;
+    transition: background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .tabs button:hover { color: var(--ink); border-color: #33445f; }
+  .tabs button[aria-pressed="true"] { background: #22304a; color: var(--ink); border-color: #3a5170; }
+
   .grid { display: grid; gap: 16px; }
-  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 860px) { .cards, .split { grid-template-columns: 1fr !important; } }
+  .cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 
   .card {
     background: linear-gradient(180deg, var(--panel-2), var(--panel));
@@ -50,53 +59,41 @@
     display: inline-block; padding: 2px 9px; border-radius: 999px;
     font-size: 11.5px; font-weight: 700; letter-spacing: .04em; vertical-align: 2px;
   }
-  .badge.last { background: rgba(108,157,255,.15); color: var(--last); border: 1px solid rgba(108,157,255,.35); }
-  .badge.this { background: rgba(255,166,61,.15); color: var(--this); border: 1px solid rgba(255,166,61,.35); }
 
-  .line { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; }
-  .stat .v { font-size: 22px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
-  .stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
-  .pts { color: var(--this); }
-  .cards .card.last .pts { color: var(--last); }
+  .line { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 14px; }
+  .stat .v { font-size: 21px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .stat .k { font-size: 10.5px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+
+  .note { color: #c8a45f; font-size: 12px; margin-top: 10px; border-left: 2px solid #6b5322; padding-left: 8px; }
 
   section { margin-top: 30px; }
   .sec-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
   .sec-head h2 { font-size: 19px; margin: 0; letter-spacing: -.01em; }
   .sec-head p { margin: 0; color: var(--muted); font-size: 13px; }
 
-  .chart-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  @media (max-width: 860px) { .chart-grid { grid-template-columns: 1fr; } }
+  .chart-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .chart-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
-  .chart-head .t { font-weight: 650; font-size: 14px; }
+  .chart-head .t { font-weight: 650; font-size: 13.5px; }
   .chart-head .t small { color: var(--muted); font-weight: 500; }
-  .splits { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .splits { color: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
   svg { display: block; width: 100%; height: auto; overflow: visible; }
-  .legend { display: flex; gap: 16px; align-items: center; color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .legend { display: flex; gap: 16px; align-items: center; color: var(--muted); font-size: 12px; margin-top: 10px; flex-wrap: wrap; }
+  .legend .sw { width: 12px; height: 3px; border-radius: 2px; display: inline-block; margin-right: 6px; vertical-align: 3px; }
   .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: -1px; }
 
-  /* shot dots */
-  .shot { cursor: default; }
-  .shot circle { transition: r .12s ease, opacity .12s ease; }
-  .shot:hover circle { r: 7.5; opacity: 1; }
-
-  .split { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+  .split { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); }
   .split > .card { display: flex; flex-direction: column; }
 
-  /* diverging bars */
-  .diet-legend { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted);
-    text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
-  .rows { display: grid; gap: 13px; }
-  .row { font-size: 12.5px; }
-  .row .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; gap: 10px; }
-  .row .z { color: var(--ink); font-weight: 600; }
-  .row .nums { color: var(--muted); font-variant-numeric: tabular-nums; }
-  .row .nums b { color: var(--last); font-weight: 650; }
-  .row .nums i { color: var(--this); font-style: normal; font-weight: 650; }
-  .track { position: relative; height: 14px; }
-  .track .mid { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--line); }
-  .bar { position: absolute; top: 2px; height: 10px; border-radius: 3px; }
-  .bar.l { right: 50%; background: var(--last); }
-  .bar.r { left: 50%; background: var(--this); }
+  /* shot diet */
+  .rows { display: grid; gap: 14px; }
+  .row .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6px; gap: 10px; }
+  .row .z { color: var(--ink); font-weight: 600; font-size: 13px; }
+  .row .seq { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12px; }
+  .row .seq b { font-weight: 650; }
+  .bars { display: grid; gap: 3px; }
+  .bar-line { display: flex; align-items: center; gap: 8px; }
+  .bar-line .fill { height: 8px; border-radius: 3px; min-width: 2px; }
+  .bar-line .tag { font-size: 10px; color: #6f7f97; width: 46px; flex: 0 0 46px; font-variant-numeric: tabular-nums; }
 
   /* radar */
   .radar-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
@@ -108,26 +105,32 @@
     font: inherit; font-size: 12px; padding: 5px 11px; border-radius: 7px; cursor: pointer;
   }
   .toggles button[aria-pressed="true"] { background: #22304a; color: var(--ink); }
-  .radar-legend { display: flex; gap: 18px; font-size: 12px; color: var(--muted); }
+  .radar-legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); flex-wrap: wrap; justify-content: center; }
   .radar-legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: 3px; }
 
   ul.findings { margin: 0; padding-left: 18px; display: grid; gap: 10px; }
   ul.findings li { color: #c8d4e6; }
   ul.findings b { color: var(--ink); }
-  .up { color: var(--this); font-weight: 650; }
-  .down { color: var(--last); font-weight: 650; }
 
   footer { margin-top: 34px; border-top: 1px solid var(--line); padding-top: 14px; color: var(--muted); font-size: 12px; }
   footer p { margin: 0 0 6px; }
   .src { color: #6f7f97; }
+
+  @media (max-width: 1080px) {
+    .cards, .chart-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 760px) {
+    .cards, .chart-grid, .split { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header class="top">
-    <div class="kicker">Shot profile comparison · opening night</div>
-    <h1>Anthony Edwards: <span>year-over-year shot chart</span></h1>
+    <div class="kicker">Shot profile comparison · first game of each season</div>
+    <h1><span id="heroName"></span>: three opening nights</h1>
     <p class="sub" id="subline"></p>
+    <div class="tabs" id="playerTabs" role="tablist" aria-label="Player"></div>
   </header>
 
   <section class="grid cards" id="gameCards"></section>
@@ -141,20 +144,17 @@
     <div class="legend">
       <span><i class="dot" style="background:var(--make)"></i>Made</span>
       <span><i class="dot" style="background:var(--miss)"></i>Missed</span>
-      <span id="chartTotals" style="margin-left:auto"></span>
+      <span id="legendSeasons" style="margin-left:auto"></span>
     </div>
   </section>
 
   <section class="grid split">
     <div class="card">
-      <div class="sec-head" style="margin-bottom:4px">
-        <h2>Shot diet</h2>
-      </div>
-      <p class="meta" style="color:var(--muted);margin:0 0 14px">
-        Share of attempts by shot zone — left is last season, right is this season.
-        Paint = inside 8 ft (ESPN plots the release point, so rim attempts read as 4–7 ft).
+      <div class="sec-head" style="margin-bottom:4px"><h2>Shot diet by season</h2></div>
+      <p class="meta" style="margin:0 0 14px">
+        Share of field-goal attempts by shot zone, one bar per season.
+        Paint = inside 8&nbsp;ft (ESPN plots the release point, so rim attempts read as 4–7&nbsp;ft).
       </p>
-      <div class="diet-legend"><span>◀ 2025-26</span><span>2026-27 ▶</span></div>
       <div class="rows" id="diet"></div>
     </div>
 
@@ -166,13 +166,10 @@
           <button data-dim="style" aria-pressed="false">Shot style</button>
         </div>
       </div>
-      <p class="meta" style="color:var(--muted);margin:0 0 6px" id="radarHint"></p>
+      <p class="meta" style="margin:0 0 6px" id="radarHint"></p>
       <div class="radar-wrap">
-        <svg id="radar" viewBox="0 0 420 400" role="img" aria-label="Radar chart comparing shot profile between seasons"></svg>
-        <div class="radar-legend">
-          <span><i style="background:var(--last)"></i><span id="lgLast"></span></span>
-          <span><i style="background:var(--this)"></i><span id="lgThis"></span></span>
-        </div>
+        <svg id="radar" viewBox="0 0 440 400" role="img" aria-label="Radar chart comparing shot profile across seasons"></svg>
+        <div class="radar-legend" id="radarLegend"></div>
       </div>
     </div>
   </section>
@@ -180,7 +177,7 @@
   <section>
     <div class="sec-head">
       <h2>What actually changed</h2>
-      <p>Computed from the two shot logs below.</p>
+      <p>Computed from the three shot logs below.</p>
     </div>
     <div class="card"><ul class="findings" id="findings"></ul></div>
   </section>
@@ -188,33 +185,48 @@
   <footer>
     <p id="srcLine"></p>
     <p class="src" id="srcNote"></p>
+    <p class="src" id="srcCaveats"></p>
   </footer>
 </div>
 
-<script src="data/shots.js"></script>
+<script src="data/meta.js"></script>
+<script src="data/ant.js"></script>
+<script src="data/luka.js"></script>
+<script src="data/lamelo.js"></script>
+<script src="data/sga.js"></script>
 <script>
 (function () {
   "use strict";
 
-  const D = window.SHOT_DATA;
-  if (!D || !D.games || D.games.length < 2) {
-    document.body.innerHTML = '<div class="wrap"><p>Shot data failed to load (data/shots.js).</p></div>';
+  // Each data file registers itself, so adding a player is one more <script> tag.
+  const meta = window.SHOT_DATA_META;
+  const players = window.SHOT_DATA_PLAYERS || [];
+  const D = meta && players.length
+    ? { generated: meta.generated, source: meta.source, seasons: meta.seasons, players }
+    : null;
+  if (!D) {
+    document.body.innerHTML = '<div class="wrap"><p>Shot data failed to load (data/meta.js and data/*.js).</p></div>';
     return;
   }
 
-  const [LAST, THIS] = D.games;
   const ZONES = ["Paint", "Short mid", "Long mid", "Corner 3", "Above break 3"];
-  const COLORS = { last: "#6c9dff", this: "#ffa63d" };
+  const COLORS = ["#6c9dff", "#a78bfa", "#ffa63d"];
+  const SEASONS = D.seasons;
 
-  const pct = (n, d) => (d ? Math.round((n / d) * 1000) / 10 : 0);
-  const fmtPct = (n, d) => pct(n, d).toFixed(1) + "%";
-  const signed = (v, unit) => (v > 0 ? "+" : "") + v.toFixed(1) + (unit || "");
   const el = (tag, attrs, kids) => {
     const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
     for (const k in attrs || {}) n.setAttribute(k, attrs[k]);
     (kids || []).forEach((c) => n.appendChild(c));
     return n;
   };
+  const pct = (n, d) => (d ? Math.round((n / d) * 1000) / 10 : 0);
+  const signed = (v, unit) => (v > 0 ? "+" : "") + v.toFixed(1) + (unit || "");
+  const cls = (v) => (v >= 0 ? "up" : "down");
+  const num = (v, u) => `<span class="${cls(v)}">${signed(v, u)}</span>`;
+  const parseFg = (v) =>
+    typeof v === "string" && v.includes("-") ? v.split("-").map(Number) : [null, null];
+
+  const activeGames = (p) => p.games.filter((g) => !g.missing);
 
   function zoneStats(game) {
     const out = {};
@@ -226,7 +238,6 @@
     });
     return out;
   }
-
   function styleStats(game) {
     const out = {};
     game.shots.forEach((s) => {
@@ -237,49 +248,13 @@
     return out;
   }
 
-  const zLast = zoneStats(LAST);
-  const zThis = zoneStats(THIS);
-  const sLast = styleStats(LAST);
-  const sThis = styleStats(THIS);
+  /* ---------- court + chart ---------- */
 
-  /* ---------- header + game cards ---------- */
-
-  const gameName = (g) => `${g.label} opener · ${g.venue}`;
-  document.getElementById("subline").innerHTML =
-    `Two games, one year apart: the <b>${LAST.label}</b> opener ${LAST.venue} ` +
-    `(${LAST.box.pts} pts) and the <b>${THIS.label}</b> opener ${THIS.venue} (${THIS.box.pts} pts). ` +
-    `Shot locations from ESPN play-by-play, plotted on the same half-court.`;
-
-  const cardsHost = document.getElementById("gameCards");
-  [LAST, THIS].forEach((g) => {
-    const cls = g.key === "last" ? "last" : "this";
-    const t = g.totals;
-    const card = document.createElement("div");
-    card.className = "card " + cls;
-    card.innerHTML = `
-      <h2><span class="badge ${cls}">${g.label}</span> &nbsp;Minnesota ${g.venue} <span style="color:var(--muted);font-weight:500">vs ${g.opponent}</span></h2>
-      <div class="meta">${g.date} · NBA game ${g.nbaGameId}</div>
-      <div class="line">
-        <div class="stat"><div class="v pts">${g.box.pts ?? "–"}</div><div class="k">Points</div></div>
-        <div class="stat"><div class="v">${g.box.fg ?? "–"}</div><div class="k">FG</div></div>
-        <div class="stat"><div class="v">${g.box.three ?? "–"}</div><div class="k">3P</div></div>
-        <div class="stat"><div class="v">${g.box.ft ?? "–"}</div><div class="k">FT</div></div>
-        <div class="stat"><div class="v">${pct(t.efg * 100, 100).toFixed(1)}%</div><div class="k">eFG</div></div>
-        <div class="stat"><div class="v">${t.avgDist.toFixed(1)}<span style="font-size:13px;color:var(--muted)"> ft</span></div><div class="k">Avg shot</div></div>
-      </div>`;
-    cardsHost.appendChild(card);
-  });
-
-  /* ---------- shot charts ---------- */
-
-  const PAD = 12;
-  const SCALE = 10;              // px per foot
-  const COURT_W = 50, COURT_D = 47;
+  const PAD = 12, SCALE = 9, COURT_W = 50, COURT_D = 47;
   const VW = COURT_W * SCALE + PAD * 2;
   const VH = COURT_D * SCALE + PAD * 2;
-
   const fx = (x) => PAD + x * SCALE;
-  const fy = (y) => PAD + (COURT_D - y) * SCALE; // baseline at the bottom
+  const fy = (y) => PAD + (COURT_D - y) * SCALE;
 
   function arcPoints(cx, cy, r, from, to, steps) {
     const pts = [];
@@ -289,7 +264,6 @@
     }
     return pts;
   }
-
   function polyline(pts, attrs) {
     return el("polyline", Object.assign({
       points: pts.map(([x, y]) => `${fx(x).toFixed(1)},${fy(y).toFixed(1)}`).join(" "),
@@ -299,140 +273,67 @@
 
   function courtBase() {
     const g = el("g", {});
-    // floor + boundary
-    g.appendChild(el("rect", { x: fx(0), y: fy(COURT_D), width: COURT_W * SCALE, height: COURT_D * SCALE, fill: "#0d1623", stroke: "none" }));
-    g.appendChild(el("rect", {
-      x: fx(0), y: fy(COURT_D), width: COURT_W * SCALE, height: COURT_D * SCALE,
-      fill: "none", stroke: "#2a3a52", "stroke-width": 1.5,
-    }));
-    // paint
-    g.appendChild(el("rect", {
-      x: fx(17), y: fy(19), width: 16 * SCALE, height: 19 * SCALE,
-      fill: "rgba(108,157,255,.055)", stroke: "#2a3a52", "stroke-width": 1.2,
-    }));
-    // free-throw circle
-    g.appendChild(el("circle", {
-      cx: fx(25), cy: fy(19), r: 6 * SCALE, fill: "none",
-      stroke: "#2a3a52", "stroke-width": 1.2, "stroke-dasharray": "4 4",
-    }));
-    // restricted area
+    g.appendChild(el("rect", { x: fx(0), y: fy(COURT_D), width: COURT_W * SCALE, height: COURT_D * SCALE, fill: "#0d1623" }));
+    g.appendChild(el("rect", { x: fx(0), y: fy(COURT_D), width: COURT_W * SCALE, height: COURT_D * SCALE, fill: "none", stroke: "#2a3a52", "stroke-width": 1.5 }));
+    g.appendChild(el("rect", { x: fx(17), y: fy(19), width: 16 * SCALE, height: 19 * SCALE, fill: "rgba(108,157,255,.055)", stroke: "#2a3a52", "stroke-width": 1.2 }));
+    g.appendChild(el("circle", { cx: fx(25), cy: fy(19), r: 6 * SCALE, fill: "none", stroke: "#2a3a52", "stroke-width": 1.2, "stroke-dasharray": "4 4" }));
     g.appendChild(polyline(arcPoints(25, 0, 4, 0, Math.PI, 40), { stroke: "#2a3a52", "stroke-width": 1.2 }));
-    // three-point line: corners + arc (hoop at y=0)
     const R3 = 23.75, cornerAt = Math.acos(22 / R3);
     g.appendChild(polyline([[3, 0], [3, R3 * Math.sin(cornerAt)]], { stroke: "#3a4d69", "stroke-width": 1.6 }));
     g.appendChild(polyline([[47, 0], [47, R3 * Math.sin(cornerAt)]], { stroke: "#3a4d69", "stroke-width": 1.6 }));
     g.appendChild(polyline(arcPoints(25, 0, R3, cornerAt, Math.PI - cornerAt, 80), { stroke: "#3a4d69", "stroke-width": 1.6 }));
-    // backboard + rim
     g.appendChild(el("line", { x1: fx(22), y1: fy(0.6), x2: fx(28), y2: fy(0.6), stroke: "#4d6386", "stroke-width": 2 }));
     g.appendChild(el("circle", { cx: fx(25), cy: fy(0), r: 0.75 * SCALE, fill: "none", stroke: "#ff9f43", "stroke-width": 1.8 }));
     return g;
   }
 
   function drawChart(game) {
-    const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": `Shot chart ${game.label}` });
+    const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": `Shot chart ${game.season}` });
     svg.appendChild(courtBase());
     const layer = el("g", {});
-    game.shots
-      .slice()
-      .sort((a, b) => Number(a.made) - Number(b.made))
-      .forEach((s) => {
-        const c = el("circle", {
-          cx: fx(s.x), cy: fy(Math.max(s.y, 0.5)),
-          r: 6.2,
-          fill: s.made ? "rgba(53,211,153,.92)" : "rgba(255,95,109,.28)",
-          stroke: s.made ? "#0a1a14" : "rgba(255,95,109,.95)",
-          "stroke-width": s.made ? 1 : 1.2,
-        }, [el("title", {}, [document.createTextNode(
-          `${s.text} · ${s.dist} ft · ${s.zone}${s.period ? ` · Q${s.period}` : ""}`
-        )])]);
-        layer.appendChild(c);
-      });
+    game.shots.slice().sort((a, b) => Number(a.made) - Number(b.made)).forEach((s) => {
+      layer.appendChild(el("circle", {
+        cx: fx(s.x), cy: fy(Math.max(s.y, 0.5)), r: 5.6,
+        fill: s.made ? "rgba(53,211,153,.92)" : "rgba(255,95,109,.28)",
+        stroke: s.made ? "#0a1a14" : "rgba(255,95,109,.95)",
+        "stroke-width": s.made ? 1 : 1.2,
+      }, [el("title", {}, [document.createTextNode(
+        `${s.text} · ${s.dist} ft · ${s.zone}${s.period ? ` · Q${s.period}` : ""}`
+      )])]));
+    });
     svg.appendChild(layer);
     return svg;
   }
 
-  const chartsHost = document.getElementById("charts");
-  [LAST, THIS].forEach((g) => {
-    const card = document.createElement("div");
-    card.className = "card";
-    const t = g.totals;
-    card.innerHTML = `
-      <div class="chart-head">
-        <div class="t"><span class="badge ${g.key === "last" ? "last" : "this"}">${g.label}</span>
-          &nbsp;${g.venue} <small>· vs ${g.opponent}</small></div>
-        <div class="splits">${t.chartedFgm}-${t.chartedFga} FG · ${t.tpm}-${t.tpa} 3P</div>
-      </div>`;
-    card.appendChild(drawChart(g));
-    chartsHost.appendChild(card);
-  });
-
-  document.getElementById("chartTotals").textContent =
-    `${LAST.shots.length + THIS.shots.length} charted attempts · hoops at the bottom, half-court to the top`;
-
-  /* ---------- shot diet (diverging bars) ---------- */
-
-  const diet = document.getElementById("diet");
-  const maxShare = Math.max(
-    0.01,
-    ...ZONES.map((z) =>
-      Math.max(zLast[z].att / LAST.shots.length, zThis[z].att / THIS.shots.length)
-    )
-  );
-
-  ZONES.forEach((z) => {
-    const aL = zLast[z].att / LAST.shots.length;
-    const aT = zThis[z].att / THIS.shots.length;
-    const wL = Math.max(aL ? 1.5 : 0, (aL / maxShare) * 48);
-    const wT = Math.max(aT ? 1.5 : 0, (aT / maxShare) * 48);
-    const row = document.createElement("div");
-    row.className = "row";
-    row.innerHTML = `
-      <div class="head">
-        <span class="z">${z}</span>
-        <span class="nums"><b>${zLast[z].made}/${zLast[z].att}</b> ${(aL * 100).toFixed(0)}% → <i>${zThis[z].made}/${zThis[z].att}</i> ${(aT * 100).toFixed(0)}%</span>
-      </div>
-      <div class="track" title="${z}">
-        <div class="mid"></div>
-        <div class="bar l" style="width:${wL.toFixed(1)}%"></div>
-        <div class="bar r" style="width:${wT.toFixed(1)}%"></div>
-      </div>`;
-    diet.appendChild(row);
-  });
-
   /* ---------- radar ---------- */
 
-  const RADAR = { cx: 210, cy: 196, r: 118 };
-  const dimToggle = document.getElementById("dimToggle");
+  const RADAR = { cx: 220, cy: 196, r: 118 };
   let dim = "zone";
 
-  function axesFor() {
-    if (dim === "zone") return ZONES.slice();
-    const all = {};
-    Object.keys(sLast).forEach((k) => (all[k] = 1));
-    Object.keys(sThis).forEach((k) => (all[k] = 1));
-    return Object.keys(all)
-      .filter((k) => sLast[k]?.att || sThis[k]?.att)
-      .sort((a, b) => (sThis[b]?.att || 0) - (sThis[a]?.att || 0));
-  }
-
-  function seriesFor(axes) {
-    const pick = (zoneMap, styleMap, total, key) => {
-      if (zoneMap[key]) return zoneMap[key].att / total;
-      if (styleMap[key]) return styleMap[key].att / total;
-      return 0;
-    };
-    return [
-      { key: "last", color: COLORS.last, values: axes.map((a) => pick(zLast, sLast, LAST.shots.length, a)) },
-      { key: "this", color: COLORS.this, values: axes.map((a) => pick(zThis, sThis, THIS.shots.length, a)) },
-    ];
-  }
-
-  function drawRadar() {
+  function drawRadar(games, zs, ss) {
     const svg = document.getElementById("radar");
     svg.innerHTML = "";
-    const axes = axesFor();
-    const series = seriesFor(axes);
-    const n = axes.length;
+
+    const axes = dim === "zone" ? ZONES.slice() : (function () {
+      const all = {};
+      games.forEach((g) => Object.keys(ss[g.season]).forEach((k) => (all[k] = 1)));
+      return Object.keys(all).sort((a, b) => {
+        const sum = (k) => games.reduce((n, g) => n + (ss[g.season][k]?.att || 0), 0);
+        return sum(b) - sum(a);
+      });
+    })();
+
+    const series = games.map((g, i) => {
+      const total = g.shots.length || 1;
+      const src = dim === "zone" ? zs[g.season] : ss[g.season];
+      return {
+        season: g.season,
+        color: COLORS[i % COLORS.length],
+        values: axes.map((a) => (src[a]?.att || 0) / total),
+      };
+    });
+
+    const n = axes.length || 1;
     const max = Math.max(0.08, ...series.flatMap((s) => s.values)) * 1.08;
     const pt = (i, v) => {
       const a = -Math.PI / 2 + (i * 2 * Math.PI) / n;
@@ -448,10 +349,10 @@
     });
     axes.forEach((ax, i) => {
       const [x, y] = pt(i, max);
-      svg.appendChild(el("line", { x1: RADAR.cx, y1: RADAR.cy, x2: x, y2: y, stroke: "#1e2a3d", "stroke-width": 1 }));
+      svg.appendChild(el("line", { x1: RADAR.cx, y1: RADAR.cy, x2: x.toFixed(1), y2: y.toFixed(1), stroke: "#1e2a3d", "stroke-width": 1 }));
       const a = -Math.PI / 2 + (i * 2 * Math.PI) / n;
-      const lx = RADAR.cx + (RADAR.r + 26) * Math.cos(a);
-      const ly = RADAR.cy + (RADAR.r + 26) * Math.sin(a);
+      const lx = RADAR.cx + (RADAR.r + 24) * Math.cos(a);
+      const ly = RADAR.cy + (RADAR.r + 24) * Math.sin(a);
       const anchor = Math.abs(Math.cos(a)) < 0.25 ? "middle" : Math.cos(a) > 0 ? "start" : "end";
       const t = el("text", { x: lx.toFixed(1), y: ly.toFixed(1), "text-anchor": anchor, class: "radar-axis" });
       t.textContent = ax;
@@ -462,72 +363,210 @@
       const pts = s.values.map((v, i) => pt(i, v));
       svg.appendChild(el("polygon", {
         points: pts.map((p) => p.map((v) => v.toFixed(1)).join(",")).join(" "),
-        fill: s.color, "fill-opacity": 0.14, stroke: s.color, "stroke-width": 2,
+        fill: s.color, "fill-opacity": 0.12, stroke: s.color, "stroke-width": 2,
       }));
       pts.forEach(([x, y], i) => {
-        const c = el("circle", { cx: x.toFixed(1), cy: y.toFixed(1), r: 3.5, fill: s.color }, [
-          el("title", {}, [document.createTextNode(`${axes[i]}: ${(s.values[i] * 100).toFixed(1)}% of attempts`)]),
-        ]);
-        svg.appendChild(c);
+        svg.appendChild(el("circle", { cx: x.toFixed(1), cy: y.toFixed(1), r: 3.2, fill: s.color }, [
+          el("title", {}, [document.createTextNode(`${s.season} · ${axes[i]}: ${(s.values[i] * 100).toFixed(1)}% of attempts`)]),
+        ]));
       });
     });
 
     svg.appendChild(el("text", { x: 8, y: 14, class: "radar-tick" }, [document.createTextNode(`Max ${(max * 100).toFixed(0)}% of attempts`)]));
-    document.getElementById("radarHint").textContent =
-      dim === "zone"
-        ? "Share of field-goal attempts by zone, same six axes for both games."
-        : "Share of attempts by shot style, read from the play-by-play text.";
+
+    document.getElementById("radarHint").textContent = dim === "zone"
+      ? "Share of field-goal attempts by zone, same axes for every season."
+      : "Share of attempts by shot style, read from the play-by-play text.";
+
+    document.getElementById("radarLegend").innerHTML = series
+      .map((s) => `<span><i style="background:${s.color}"></i>${s.season}</span>`)
+      .join("");
   }
 
-  document.getElementById("lgLast").textContent = LAST.label + " opener";
-  document.getElementById("lgThis").textContent = THIS.label + " opener";
+  /* ---------- render ---------- */
 
-  dimToggle.addEventListener("click", (e) => {
+  let currentKey = D.players[0].key;
+
+  function render(key) {
+    const p = D.players.find((x) => x.key === key) || D.players[0];
+    currentKey = p.key;
+    const games = activeGames(p);
+    const all = p.games;
+
+    [...document.querySelectorAll("#playerTabs button")].forEach((b) =>
+      b.setAttribute("aria-pressed", String(b.dataset.key === p.key))
+    );
+
+    document.getElementById("heroName").textContent = p.name;
+    document.getElementById("subline").innerHTML = games.length
+      ? `First game of each season — ` +
+        games.map((g) => `<b>${g.season}</b> ${g.venue} on ${g.date} (${g.box.pts} pts)`).join(", ") +
+        `. Shot locations from ESPN play-by-play, plotted on identical half-courts.`
+      : "No chartable games found for this player.";
+
+    /* game cards */
+    const cardsHost = document.getElementById("gameCards");
+    cardsHost.innerHTML = "";
+    all.forEach((g, i) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      if (g.missing) {
+        card.innerHTML = `<h2><span class="badge" style="background:#20293a;color:${COLORS[i]}">${g.season}</span></h2>
+          <div class="meta">No regular-season game on record.</div>`;
+        cardsHost.appendChild(card);
+        return;
+      }
+      const t = g.totals;
+      card.innerHTML = `
+        <h2><span class="badge" style="background:rgba(255,255,255,.06);color:${COLORS[i % COLORS.length]}">${g.season}</span>
+          &nbsp;${g.team} ${g.venue} <span style="color:var(--muted);font-weight:500">vs ${g.opponent}</span></h2>
+        <div class="meta">${g.date} · ${g.teamScore}–${g.oppScore} · first of ${g.seasonGames} games played</div>
+        <div class="line">
+          <div class="stat"><div class="v" style="color:${COLORS[i % COLORS.length]}">${g.box.pts ?? "–"}</div><div class="k">Points</div></div>
+          <div class="stat"><div class="v">${g.box.fg ?? "–"}</div><div class="k">FG</div></div>
+          <div class="stat"><div class="v">${g.box.three ?? "–"}</div><div class="k">3P</div></div>
+          <div class="stat"><div class="v">${g.box.ft ?? "–"}</div><div class="k">FT</div></div>
+          <div class="stat"><div class="v">${(t.efg * 100).toFixed(1)}%</div><div class="k">eFG</div></div>
+          <div class="stat"><div class="v">${t.avgDist.toFixed(1)}<span style="font-size:12px;color:var(--muted)"> ft</span></div><div class="k">Avg shot</div></div>
+        </div>
+        ${g.missedTeamOpener && g.teamOpener ? `<div class="note">Missed ${g.team}'s opener (${g.teamOpener.date} ${g.teamOpener.venue}). This is his first game played, ${g.seasonGames} total that season.</div>` : ""}`;
+      cardsHost.appendChild(card);
+    });
+
+    /* charts */
+    const chartsHost = document.getElementById("charts");
+    chartsHost.innerHTML = "";
+    all.forEach((g, i) => {
+      const card = document.createElement("div");
+      card.className = "card";
+      if (g.missing) {
+        card.innerHTML = `<div class="chart-head"><div class="t"><span class="badge" style="background:#20293a;color:${COLORS[i]}">${g.season}</span></div></div>
+          <div class="meta">No chartable game.</div>`;
+        chartsHost.appendChild(card);
+        return;
+      }
+      const t = g.totals;
+      card.innerHTML = `
+        <div class="chart-head">
+          <div class="t"><span class="badge" style="background:rgba(255,255,255,.06);color:${COLORS[i % COLORS.length]}">${g.season}</span>
+            &nbsp;${g.venue} <small>· ${g.date}</small></div>
+          <div class="splits">${t.chartedFgm}-${t.chartedFga} FG · ${t.tpm}-${t.tpa} 3P</div>
+        </div>`;
+      card.appendChild(drawChart(g));
+      chartsHost.appendChild(card);
+    });
+    document.getElementById("legendSeasons").textContent =
+      `${games.reduce((n, g) => n + g.shots.length, 0)} charted attempts · hoops at the bottom, half-court to the top`;
+
+    /* shot diet */
+    const zs = {}, ss = {};
+    games.forEach((g) => { zs[g.season] = zoneStats(g); ss[g.season] = styleStats(g); });
+
+    const dietHost = document.getElementById("diet");
+    dietHost.innerHTML = "";
+    const shareOf = (g, z) => (g.shots.length ? zs[g.season][z].att / g.shots.length : 0);
+    const maxShare = Math.max(0.01, ...ZONES.flatMap((z) => games.map((g) => shareOf(g, z))));
+
+    ZONES.forEach((z) => {
+      const row = document.createElement("div");
+      row.className = "row";
+      const seq = games.map((g, i) => {
+        const s = zs[g.season][z];
+        return `<b style="color:${COLORS[i % COLORS.length]}">${(shareOf(g, z) * 100).toFixed(0)}%</b>`;
+      }).join(" → ");
+      row.innerHTML = `
+        <div class="head">
+          <span class="z">${z}</span>
+          <span class="seq">${seq} <span style="color:#55637a">of attempts</span></span>
+        </div>
+        <div class="bars">
+          ${games.map((g, i) => {
+            const s = zs[g.season][z];
+            const w = (shareOf(g, z) / maxShare) * 100;
+            return `<div class="bar-line" title="${g.season} ${z}: ${s.made}/${s.att} (${(shareOf(g, z) * 100).toFixed(0)}% of attempts)">
+              <span class="tag">${g.season.slice(2)}&nbsp;${s.made}-${s.att}</span>
+              <span class="fill" style="width:${w.toFixed(1)}%;background:${COLORS[i % COLORS.length]}"></span>
+            </div>`;
+          }).join("")}
+        </div>`;
+      dietHost.appendChild(row);
+    });
+
+    if (games.length) drawRadar(games, zs, ss);
+
+    /* findings */
+    const findingsHost = document.getElementById("findings");
+    findingsHost.innerHTML = "";
+    if (games.length >= 2) {
+      const a = games[0], z = games[games.length - 1];
+      const tA = a.totals, tZ = z.totals;
+      const seqOf = (pick) => games.map((g) => `${(pick(g) * 100).toFixed(0)}%`).join(" → ");
+
+      const midOf = (g) => (zs[g.season]["Short mid"].att + zs[g.season]["Long mid"].att) / (g.shots.length || 1);
+      const bullets = [
+        `<b>Three-point rate:</b> ${seqOf((g) => g.totals.threeRate)} of attempts, ${num((tZ.threeRate - tA.threeRate) * 100, " pts")} from ${a.season} to ${z.season}.`,
+        `<b>Paint rate:</b> ${seqOf((g) => g.totals.paintRate)}, ${num((tZ.paintRate - tA.paintRate) * 100, " pts")} across the three seasons.`,
+        `<b>Mid-range rate:</b> ${seqOf(midOf)}, ${num((midOf(z) - midOf(a)) * 100, " pts")}.`,
+        `<b>Efficiency:</b> ${seqOf((g) => g.totals.efg)} eFG, ${num((tZ.efg - tA.efg) * 100, " pts")} from ${a.season} to ${z.season}.`,
+        `<b>Shot distance:</b> ${games.map((g) => g.totals.avgDist.toFixed(1) + " ft").join(" → ")}, ${num(tZ.avgDist - tA.avgDist, " ft")}.`,
+        `<b>Volume:</b> ${games.map((g) => `${g.totals.chartedFga} FGA`).join(" → ")}, ${num(tZ.chartedFga - tA.chartedFga, "")} attempts.`,
+        `<b>Scoring:</b> ${games.map((g) => `${g.box.pts} pts (${g.box.fg} FG, ${g.box.three} 3P)`).join("; ")}.`,
+      ];
+      findingsHost.innerHTML = bullets.map((b) => `<li>${b}</li>`).join("");
+    } else {
+      findingsHost.innerHTML = "<li>Not enough games to compare.</li>";
+    }
+
+    /* footer */
+    document.getElementById("srcLine").textContent = games.length
+      ? `${p.name} — ${games.map((g) => `${g.season}: ${g.team} ${g.venue} on ${g.date}, ${g.box.pts} pts (${g.box.fg} FG, ${g.box.three} 3P, ${g.box.ft} FT)`).join(" | ")}`
+      : `${p.name} — no games.`;
+
+    const caveats = [];
+    games.forEach((g) => {
+      const [bm, ba] = parseFg(g.box.fg);
+      if (Number.isFinite(ba) && ba !== g.totals.chartedFga) {
+        caveats.push(`${g.season}: ESPN's play feed lists ${g.totals.chartedFga} attempts against the official box's ${ba}, so the chart header and the stat card differ by ${Math.abs(g.totals.chartedFga - ba)} attempt(s).`);
+      }
+      if (g.missedTeamOpener && g.teamOpener) {
+        caveats.push(`${g.season}: not opening night for the team — ${g.team} opened on ${g.teamOpener.date} (${g.teamOpener.venue}) and he first appeared on ${g.date}; he played ${g.seasonGames} game${g.seasonGames === 1 ? "" : "s"} that season.`);
+      }
+    });
+    document.getElementById("srcCaveats").textContent = caveats.length
+      ? "Caveats: " + caveats.join(" ")
+      : "";
+
+    document.getElementById("srcNote").textContent =
+      `Source: ${D.source} Charted attempts: ${games.map((g) => `${g.season} ${g.totals.chartedFga}`).join(", ")}. Built ${D.generated.slice(0, 10)}.`;
+  }
+
+  /* ---------- player tabs ---------- */
+
+  const tabs = document.getElementById("playerTabs");
+  tabs.innerHTML = D.players
+    .map((p) => `<button type="button" role="tab" data-key="${p.key}" aria-pressed="false">${p.short}</button>`)
+    .join("");
+
+  tabs.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (b) render(b.dataset.key);
+  });
+
+  document.getElementById("dimToggle").addEventListener("click", (e) => {
     const b = e.target.closest("button");
     if (!b) return;
     dim = b.dataset.dim;
-    [...dimToggle.querySelectorAll("button")].forEach((x) =>
+    [...document.querySelectorAll("#dimToggle button")].forEach((x) =>
       x.setAttribute("aria-pressed", String(x === b))
     );
-    drawRadar();
+    const p = D.players.find((x) => x.key === currentKey);
+    const games = activeGames(p);
+    const zs = {}, ss = {};
+    games.forEach((g) => { zs[g.season] = zoneStats(g); ss[g.season] = styleStats(g); });
+    if (games.length) drawRadar(games, zs, ss);
   });
-  drawRadar();
 
-  /* ---------- findings ---------- */
-
-  const tL = LAST.totals, tT = THIS.totals;
-  const dThree = (tT.threeRate - tL.threeRate) * 100;
-  const dPaint = (tT.paintRate - tL.paintRate) * 100;
-  const dMid = (tT.midRate - tL.midRate) * 100;
-  const dEfg = (tT.efg - tL.efg) * 100;
-  const dDist = tT.avgDist - tL.avgDist;
-  const midL = zLast["Short mid"].att + zLast["Long mid"].att;
-  const midT = zThis["Short mid"].att + zThis["Long mid"].att;
-  const cls = (v) => (v >= 0 ? "up" : "down");
-  const num = (v, u) => `<span class="${cls(v)}">${signed(v, u)}</span>`;
-
-  const bullets = [
-    `<b>Three-point volume:</b> ${tL.tpa} of ${tL.chartedFga} attempts (${(tL.threeRate * 100).toFixed(0)}%) → ` +
-      `${tT.tpa} of ${tT.chartedFga} (${(tT.threeRate * 100).toFixed(0)}%), a ${num(dThree, " pts")} swing in three-point rate.`,
-    `<b>Paint pressure:</b> ${zLast["Paint"].att} attempts inside 8 ft (${(tL.paintRate * 100).toFixed(0)}%) → ` +
-      `${zThis["Paint"].att} (${(tT.paintRate * 100).toFixed(0)}%), ${num(dPaint, " pts")}.`,
-    `<b>Mid-range:</b> ${midL} attempts (${(tL.midRate * 100).toFixed(0)}%) → ${midT} (${(tT.midRate * 100).toFixed(0)}%), ${num(dMid, " pts")} of his diet.`,
-    `<b>Efficiency:</b> ${(tL.efg * 100).toFixed(1)}% eFG on ${tL.chartedFga} attempts → ${(tT.efg * 100).toFixed(1)}% on ${tT.chartedFga}, ${num(dEfg, " pts")}.`,
-    `<b>Shot distance:</b> average attempt ${tL.avgDist.toFixed(1)} ft → ${tT.avgDist.toFixed(1)} ft (${num(dDist, " ft")}).`,
-    `<b>Style mix:</b> ${(sThis["Pull-up"]?.att || 0) + (sThis["Step-back"]?.att || 0)} pull-up/step-back jumpers this year vs ` +
-      `${(sLast["Pull-up"]?.att || 0) + (sLast["Step-back"]?.att || 0)} last year; ` +
-      `${(sThis["Dunk"]?.att || 0) + (sThis["Layup"]?.att || 0)} rim finishes vs ${(sLast["Dunk"]?.att || 0) + (sLast["Layup"]?.att || 0)}.`,
-  ];
-  document.getElementById("findings").innerHTML = bullets.map((b) => `<li>${b}</li>`).join("");
-
-  /* ---------- footer ---------- */
-
-  document.getElementById("srcLine").textContent =
-    `${D.player.name} · ${LAST.label} opener (${LAST.date}, ${LAST.venue}) vs ${THIS.label} opener (${THIS.date}, ${THIS.venue}). ` +
-    `Official lines: ${LAST.box.pts} pts (${LAST.box.fg} FG, ${LAST.box.three} 3P) and ${THIS.box.pts} pts (${THIS.box.fg} FG, ${THIS.box.three} 3P).`;
-  document.getElementById("srcNote").textContent =
-    `Source: ${D.source} Charted attempts: ${LAST.totals.chartedFga} and ${THIS.totals.chartedFga} ` +
-    `(ESPN's public feed can list a play or two off the official box count). Built ${D.generated.slice(0, 10)}.`;
+  render(D.players[0].key);
 })();
 </script>
 </body>
