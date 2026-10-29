@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Anthony Edwards — Opening Night Shot Profile</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --panel: #121a27;
+    --panel-2: #17202f;
+    --line: #243044;
+    --ink: #e8eef7;
+    --muted: #8b9bb4;
+    --make: #35d399;
+    --miss: #ff5f6d;
+    --last: #6c9dff;
+    --this: #ffa63d;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: radial-gradient(1200px 600px at 20% -10%, #16233a 0%, var(--bg) 55%);
+    color: var(--ink);
+    font: 15px/1.5 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    padding: 28px 20px 60px;
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; }
+  header.top { margin-bottom: 26px; }
+  .kicker {
+    text-transform: uppercase; letter-spacing: .16em; font-size: 11px;
+    color: var(--muted); font-weight: 600; margin-bottom: 8px;
+  }
+  h1 { font-size: clamp(26px, 3.4vw, 40px); line-height: 1.1; margin: 0 0 8px; letter-spacing: -.02em; }
+  h1 span { color: var(--this); }
+  .sub { color: var(--muted); max-width: 78ch; margin: 0; }
+  .sub b { color: var(--ink); font-weight: 600; }
+
+  .grid { display: grid; gap: 16px; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 860px) { .cards, .split { grid-template-columns: 1fr !important; } }
+
+  .card {
+    background: linear-gradient(180deg, var(--panel-2), var(--panel));
+    border: 1px solid var(--line); border-radius: 16px; padding: 18px;
+  }
+  .card h2 { font-size: 15px; margin: 0 0 2px; letter-spacing: .01em; }
+  .card .meta { color: var(--muted); font-size: 12.5px; }
+  .badge {
+    display: inline-block; padding: 2px 9px; border-radius: 999px;
+    font-size: 11.5px; font-weight: 700; letter-spacing: .04em; vertical-align: 2px;
+  }
+  .badge.last { background: rgba(108,157,255,.15); color: var(--last); border: 1px solid rgba(108,157,255,.35); }
+  .badge.this { background: rgba(255,166,61,.15); color: var(--this); border: 1px solid rgba(255,166,61,.35); }
+
+  .line { display: flex; gap: 18px; flex-wrap: wrap; margin-top: 14px; }
+  .stat .v { font-size: 22px; font-weight: 700; letter-spacing: -.02em; font-variant-numeric: tabular-nums; }
+  .stat .k { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+  .pts { color: var(--this); }
+  .cards .card.last .pts { color: var(--last); }
+
+  section { margin-top: 30px; }
+  .sec-head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+  .sec-head h2 { font-size: 19px; margin: 0; letter-spacing: -.01em; }
+  .sec-head p { margin: 0; color: var(--muted); font-size: 13px; }
+
+  .chart-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  @media (max-width: 860px) { .chart-grid { grid-template-columns: 1fr; } }
+  .chart-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .chart-head .t { font-weight: 650; font-size: 14px; }
+  .chart-head .t small { color: var(--muted); font-weight: 500; }
+  .splits { color: var(--muted); font-size: 12px; font-variant-numeric: tabular-nums; }
+  svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .legend { display: flex; gap: 16px; align-items: center; color: var(--muted); font-size: 12px; margin-top: 8px; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; margin-right: 6px; vertical-align: -1px; }
+
+  /* shot dots */
+  .shot { cursor: default; }
+  .shot circle { transition: r .12s ease, opacity .12s ease; }
+  .shot:hover circle { r: 7.5; opacity: 1; }
+
+  .split { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); }
+  .split > .card { display: flex; flex-direction: column; }
+
+  /* diverging bars */
+  .diet-legend { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+  .rows { display: grid; gap: 13px; }
+  .row { font-size: 12.5px; }
+  .row .head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; gap: 10px; }
+  .row .z { color: var(--ink); font-weight: 600; }
+  .row .nums { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .row .nums b { color: var(--last); font-weight: 650; }
+  .row .nums i { color: var(--this); font-style: normal; font-weight: 650; }
+  .track { position: relative; height: 14px; }
+  .track .mid { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 1px; background: var(--line); }
+  .bar { position: absolute; top: 2px; height: 10px; border-radius: 3px; }
+  .bar.l { right: 50%; background: var(--last); }
+  .bar.r { left: 50%; background: var(--this); }
+
+  /* radar */
+  .radar-wrap { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+  .radar-axis { font-size: 11px; fill: var(--muted); }
+  .radar-tick { font-size: 9px; fill: #55637a; }
+  .toggles { display: inline-flex; gap: 4px; background: #0e1521; border: 1px solid var(--line); border-radius: 10px; padding: 3px; }
+  .toggles button {
+    appearance: none; border: 0; background: transparent; color: var(--muted);
+    font: inherit; font-size: 12px; padding: 5px 11px; border-radius: 7px; cursor: pointer;
+  }
+  .toggles button[aria-pressed="true"] { background: #22304a; color: var(--ink); }
+  .radar-legend { display: flex; gap: 18px; font-size: 12px; color: var(--muted); }
+  .radar-legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; margin-right: 6px; vertical-align: 3px; }
+
+  ul.findings { margin: 0; padding-left: 18px; display: grid; gap: 10px; }
+  ul.findings li { color: #c8d4e6; }
+  ul.findings b { color: var(--ink); }
+  .up { color: var(--this); font-weight: 650; }
+  .down { color: var(--last); font-weight: 650; }
+
+  footer { margin-top: 34px; border-top: 1px solid var(--line); padding-top: 14px; color: var(--muted); font-size: 12px; }
+  footer p { margin: 0 0 6px; }
+  .src { color: #6f7f97; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="kicker">Shot profile comparison · opening night</div>
+    <h1>Anthony Edwards: <span>year-over-year shot chart</span></h1>
+    <p class="sub" id="subline"></p>
+  </header>
+
+  <section class="grid cards" id="gameCards"></section>
+
+  <section>
+    <div class="sec-head">
+      <h2>Shot charts</h2>
+      <p>Every field-goal attempt, plotted from ESPN's shot coordinates. Hover a dot for the play.</p>
+    </div>
+    <div class="grid chart-grid" id="charts"></div>
+    <div class="legend">
+      <span><i class="dot" style="background:var(--make)"></i>Made</span>
+      <span><i class="dot" style="background:var(--miss)"></i>Missed</span>
+      <span id="chartTotals" style="margin-left:auto"></span>
+    </div>
+  </section>
+
+  <section class="grid split">
+    <div class="card">
+      <div class="sec-head" style="margin-bottom:4px">
+        <h2>Shot diet</h2>
+      </div>
+      <p class="meta" style="color:var(--muted);margin:0 0 14px">
+        Share of attempts by shot zone — left is last season, right is this season.
+        Paint = inside 8 ft (ESPN plots the release point, so rim attempts read as 4–7 ft).
+      </p>
+      <div class="diet-legend"><span>◀ 2025-26</span><span>2026-27 ▶</span></div>
+      <div class="rows" id="diet"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-head" style="margin-bottom:4px;justify-content:space-between">
+        <h2>Profile radar</h2>
+        <div class="toggles" id="dimToggle">
+          <button data-dim="zone" aria-pressed="true">Shot zone</button>
+          <button data-dim="style" aria-pressed="false">Shot style</button>
+        </div>
+      </div>
+      <p class="meta" style="color:var(--muted);margin:0 0 6px" id="radarHint"></p>
+      <div class="radar-wrap">
+        <svg id="radar" viewBox="0 0 420 400" role="img" aria-label="Radar chart comparing shot profile between seasons"></svg>
+        <div class="radar-legend">
+          <span><i style="background:var(--last)"></i><span id="lgLast"></span></span>
+          <span><i style="background:var(--this)"></i><span id="lgThis"></span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <h2>What actually changed</h2>
+      <p>Computed from the two shot logs below.</p>
+    </div>
+    <div class="card"><ul class="findings" id="findings"></ul></div>
+  </section>
+
+  <footer>
+    <p id="srcLine"></p>
+    <p class="src" id="srcNote"></p>
+  </footer>
+</div>
+
+<script src="data/shots.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const D = window.SHOT_DATA;
+  if (!D || !D.games || D.games.length < 2) {
+    document.body.innerHTML = '<div class="wrap"><p>Shot data failed to load (data/shots.js).</p></div>';
+    return;
+  }
+
+  const [LAST, THIS] = D.games;
+  const ZONES = ["Paint", "Short mid", "Long mid", "Corner 3", "Above break 3"];
+  const COLORS = { last: "#6c9dff", this: "#ffa63d" };
+
+  const pct = (n, d) => (d ? Math.round((n / d) * 1000) / 10 : 0);
+  const fmtPct = (n, d) => pct(n, d).toFixed(1) + "%";
+  const signed = (v, unit) => (v > 0 ? "+" : "") + v.toFixed(1) + (unit || "");
+  const el = (tag, attrs, kids) => {
+    const n = document.createElementNS("http://www.w3.org/2000/svg", tag);
+    for (const k in attrs || {}) n.setAttribute(k, attrs[k]);
+    (kids || []).forEach((c) => n.appendChild(c));
+    return n;
+  };
+
+  function zoneStats(game) {
+    const out = {};
+    ZONES.forEach((z) => (out[z] = { att: 0, made: 0 }));
+    game.shots.forEach((s) => {
+      const z = out[s.zone] ? s.zone : "Long mid";
+      out[z].att++;
+      if (s.made) out[z].made++;
+    });
+    return out;
+  }
+
+  function styleStats(game) {
+    const out = {};
+    game.shots.forEach((s) => {
+      out[s.style] = out[s.style] || { att: 0, made: 0 };
+      out[s.style].att++;
+      if (s.made) out[s.style].made++;
+    });
+    return out;
+  }
+
+  const zLast = zoneStats(LAST);
+  const zThis = zoneStats(THIS);
+  const sLast = styleStats(LAST);
+  const sThis = styleStats(THIS);
+
+  /* ---------- header + game cards ---------- */
+
+  const gameName = (g) => `${g.label} opener · ${g.venue}`;
+  document.getElementById("subline").innerHTML =
+    `Two games, one year apart: the <b>${LAST.label}</b> opener ${LAST.venue} ` +
+    `(${LAST.box.pts} pts) and the <b>${THIS.label}</b> opener ${THIS.venue} (${THIS.box.pts} pts). ` +
+    `Shot locations from ESPN play-by-play, plotted on the same half-court.`;
+
+  const cardsHost = document.getElementById("gameCards");
+  [LAST, THIS].forEach((g) => {
+    const cls = g.key === "last" ? "last" : "this";
+    const t = g.totals;
+    const card = document.createElement("div");
+    card.className = "card " + cls;
+    card.innerHTML = `
+      <h2><span class="badge ${cls}">${g.label}</span> &nbsp;Minnesota ${g.venue} <span style="color:var(--muted);font-weight:500">vs ${g.opponent}</span></h2>
+      <div class="meta">${g.date} · NBA game ${g.nbaGameId}</div>
+      <div class="line">
+        <div class="stat"><div class="v pts">${g.box.pts ?? "–"}</div><div class="k">Points</div></div>
+        <div class="stat"><div class="v">${g.box.fg ?? "–"}</div><div class="k">FG</div></div>
+        <div class="stat"><div class="v">${g.box.three ?? "–"}</div><div class="k">3P</div></div>
+        <div class="stat"><div class="v">${g.box.ft ?? "–"}</div><div class="k">FT</div></div>
+        <div class="stat"><div class="v">${pct(t.efg * 100, 100).toFixed(1)}%</div><div class="k">eFG</div></div>
+        <div class="stat"><div class="v">${t.avgDist.toFixed(1)}<span style="font-size:13px;color:var(--muted)"> ft</span></div><div class="k">Avg shot</div></div>
+      </div>`;
+    cardsHost.appendChild(card);
+  });
+
+  /* ---------- shot charts ---------- */
+
+  const PAD = 12;
+  const SCALE = 10;              // px per foot
+  const COURT_W = 50, COURT_D = 47;
+  const VW = COURT_W * SCALE + PAD * 2;
+  const VH = COURT_D * SCALE + PAD * 2;
+
+  const fx = (x) => PAD + x * SCALE;
+  const fy = (y) => PAD + (COURT_D - y) * SCALE; // baseline at the bottom
+
+  function arcPoints(cx, cy, r, from, to, steps) {
+    const pts = [];
+    for (let i = 0; i <= (steps || 60); i++) {
+      const a = from + ((to - from) * i) / (steps || 60);
+      pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+    }
+    return pts;
+  }
+
+  function polyline(pts, attrs) {
+    return el("polyline", Object.assign({
+      points: pts.map(([x, y]) => `${fx(x).toFixed(1)},${fy(y).toFixed(1)}`).join(" "),
+      fill: "none",
+    }, attrs));
+  }
+
+  function courtBase() {
+    const g = el("g", {});
+    // floor + boundary
+    g.appendChild(el("rect", { x: fx(0), y: fy(COURT_D), width: COURT_W * SCALE, height: COURT_D * SCALE, fill: "#0d1623", stroke: "none" }));
+    g.appendChild(el("rect", {
+      x: fx(0), y: fy(COURT_D), width: COURT_W * SCALE, height: COURT_D * SCALE,
+      fill: "none", stroke: "#2a3a52", "stroke-width": 1.5,
+    }));
+    // paint
+    g.appendChild(el("rect", {
+      x: fx(17), y: fy(19), width: 16 * SCALE, height: 19 * SCALE,
+      fill: "rgba(108,157,255,.055)", stroke: "#2a3a52", "stroke-width": 1.2,
+    }));
+    // free-throw circle
+    g.appendChild(el("circle", {
+      cx: fx(25), cy: fy(19), r: 6 * SCALE, fill: "none",
+      stroke: "#2a3a52", "stroke-width": 1.2, "stroke-dasharray": "4 4",
+    }));
+    // restricted area
+    g.appendChild(polyline(arcPoints(25, 0, 4, 0, Math.PI, 40), { stroke: "#2a3a52", "stroke-width": 1.2 }));
+    // three-point line: corners + arc (hoop at y=0)
+    const R3 = 23.75, cornerAt = Math.acos(22 / R3);
+    g.appendChild(polyline([[3, 0], [3, R3 * Math.sin(cornerAt)]], { stroke: "#3a4d69", "stroke-width": 1.6 }));
+    g.appendChild(polyline([[47, 0], [47, R3 * Math.sin(cornerAt)]], { stroke: "#3a4d69", "stroke-width": 1.6 }));
+    g.appendChild(polyline(arcPoints(25, 0, R3, cornerAt, Math.PI - cornerAt, 80), { stroke: "#3a4d69", "stroke-width": 1.6 }));
+    // backboard + rim
+    g.appendChild(el("line", { x1: fx(22), y1: fy(0.6), x2: fx(28), y2: fy(0.6), stroke: "#4d6386", "stroke-width": 2 }));
+    g.appendChild(el("circle", { cx: fx(25), cy: fy(0), r: 0.75 * SCALE, fill: "none", stroke: "#ff9f43", "stroke-width": 1.8 }));
+    return g;
+  }
+
+  function drawChart(game) {
+    const svg = el("svg", { viewBox: `0 0 ${VW} ${VH}`, role: "img", "aria-label": `Shot chart ${game.label}` });
+    svg.appendChild(courtBase());
+    const layer = el("g", {});
+    game.shots
+      .slice()
+      .sort((a, b) => Number(a.made) - Number(b.made))
+      .forEach((s) => {
+        const c = el("circle", {
+          cx: fx(s.x), cy: fy(Math.max(s.y, 0.5)),
+          r: 6.2,
+          fill: s.made ? "rgba(53,211,153,.92)" : "rgba(255,95,109,.28)",
+          stroke: s.made ? "#0a1a14" : "rgba(255,95,109,.95)",
+          "stroke-width": s.made ? 1 : 1.2,
+        }, [el("title", {}, [document.createTextNode(
+          `${s.text} · ${s.dist} ft · ${s.zone}${s.period ? ` · Q${s.period}` : ""}`
+        )])]);
+        layer.appendChild(c);
+      });
+    svg.appendChild(layer);
+    return svg;
+  }
+
+  const chartsHost = document.getElementById("charts");
+  [LAST, THIS].forEach((g) => {
+    const card = document.createElement("div");
+    card.className = "card";
+    const t = g.totals;
+    card.innerHTML = `
+      <div class="chart-head">
+        <div class="t"><span class="badge ${g.key === "last" ? "last" : "this"}">${g.label}</span>
+          &nbsp;${g.venue} <small>· vs ${g.opponent}</small></div>
+        <div class="splits">${t.chartedFgm}-${t.chartedFga} FG · ${t.tpm}-${t.tpa} 3P</div>
+      </div>`;
+    card.appendChild(drawChart(g));
+    chartsHost.appendChild(card);
+  });
+
+  document.getElementById("chartTotals").textContent =
+    `${LAST.shots.length + THIS.shots.length} charted attempts · hoops at the bottom, half-court to the top`;
+
+  /* ---------- shot diet (diverging bars) ---------- */
+
+  const diet = document.getElementById("diet");
+  const maxShare = Math.max(
+    0.01,
+    ...ZONES.map((z) =>
+      Math.max(zLast[z].att / LAST.shots.length, zThis[z].att / THIS.shots.length)
+    )
+  );
+
+  ZONES.forEach((z) => {
+    const aL = zLast[z].att / LAST.shots.length;
+    const aT = zThis[z].att / THIS.shots.length;
+    const wL = Math.max(aL ? 1.5 : 0, (aL / maxShare) * 48);
+    const wT = Math.max(aT ? 1.5 : 0, (aT / maxShare) * 48);
+    const row = document.createElement("div");
+    row.className = "row";
+    row.innerHTML = `
+      <div class="head">
+        <span class="z">${z}</span>
+        <span class="nums"><b>${zLast[z].made}/${zLast[z].att}</b> ${(aL * 100).toFixed(0)}% → <i>${zThis[z].made}/${zThis[z].att}</i> ${(aT * 100).toFixed(0)}%</span>
+      </div>
+      <div class="track" title="${z}">
+        <div class="mid"></div>
+        <div class="bar l" style="width:${wL.toFixed(1)}%"></div>
+        <div class="bar r" style="width:${wT.toFixed(1)}%"></div>
+      </div>`;
+    diet.appendChild(row);
+  });
+
+  /* ---------- radar ---------- */
+
+  const RADAR = { cx: 210, cy: 196, r: 118 };
+  const dimToggle = document.getElementById("dimToggle");
+  let dim = "zone";
+
+  function axesFor() {
+    if (dim === "zone") return ZONES.slice();
+    const all = {};
+    Object.keys(sLast).forEach((k) => (all[k] = 1));
+    Object.keys(sThis).forEach((k) => (all[k] = 1));
+    return Object.keys(all)
+      .filter((k) => sLast[k]?.att || sThis[k]?.att)
+      .sort((a, b) => (sThis[b]?.att || 0) - (sThis[a]?.att || 0));
+  }
+
+  function seriesFor(axes) {
+    const pick = (zoneMap, styleMap, total, key) => {
+      if (zoneMap[key]) return zoneMap[key].att / total;
+      if (styleMap[key]) return styleMap[key].att / total;
+      return 0;
+    };
+    return [
+      { key: "last", color: COLORS.last, values: axes.map((a) => pick(zLast, sLast, LAST.shots.length, a)) },
+      { key: "this", color: COLORS.this, values: axes.map((a) => pick(zThis, sThis, THIS.shots.length, a)) },
+    ];
+  }
+
+  function drawRadar() {
+    const svg = document.getElementById("radar");
+    svg.innerHTML = "";
+    const axes = axesFor();
+    const series = seriesFor(axes);
+    const n = axes.length;
+    const max = Math.max(0.08, ...series.flatMap((s) => s.values)) * 1.08;
+    const pt = (i, v) => {
+      const a = -Math.PI / 2 + (i * 2 * Math.PI) / n;
+      const rr = (v / max) * RADAR.r;
+      return [RADAR.cx + rr * Math.cos(a), RADAR.cy + rr * Math.sin(a)];
+    };
+
+    [0.25, 0.5, 0.75, 1].forEach((f) => {
+      svg.appendChild(el("polygon", {
+        points: axes.map((_, i) => pt(i, max * f).map((v) => v.toFixed(1)).join(",")).join(" "),
+        fill: "none", stroke: "#1e2a3d", "stroke-width": 1,
+      }));
+    });
+    axes.forEach((ax, i) => {
+      const [x, y] = pt(i, max);
+      svg.appendChild(el("line", { x1: RADAR.cx, y1: RADAR.cy, x2: x, y2: y, stroke: "#1e2a3d", "stroke-width": 1 }));
+      const a = -Math.PI / 2 + (i * 2 * Math.PI) / n;
+      const lx = RADAR.cx + (RADAR.r + 26) * Math.cos(a);
+      const ly = RADAR.cy + (RADAR.r + 26) * Math.sin(a);
+      const anchor = Math.abs(Math.cos(a)) < 0.25 ? "middle" : Math.cos(a) > 0 ? "start" : "end";
+      const t = el("text", { x: lx.toFixed(1), y: ly.toFixed(1), "text-anchor": anchor, class: "radar-axis" });
+      t.textContent = ax;
+      svg.appendChild(t);
+    });
+
+    series.forEach((s) => {
+      const pts = s.values.map((v, i) => pt(i, v));
+      svg.appendChild(el("polygon", {
+        points: pts.map((p) => p.map((v) => v.toFixed(1)).join(",")).join(" "),
+        fill: s.color, "fill-opacity": 0.14, stroke: s.color, "stroke-width": 2,
+      }));
+      pts.forEach(([x, y], i) => {
+        const c = el("circle", { cx: x.toFixed(1), cy: y.toFixed(1), r: 3.5, fill: s.color }, [
+          el("title", {}, [document.createTextNode(`${axes[i]}: ${(s.values[i] * 100).toFixed(1)}% of attempts`)]),
+        ]);
+        svg.appendChild(c);
+      });
+    });
+
+    svg.appendChild(el("text", { x: 8, y: 14, class: "radar-tick" }, [document.createTextNode(`Max ${(max * 100).toFixed(0)}% of attempts`)]));
+    document.getElementById("radarHint").textContent =
+      dim === "zone"
+        ? "Share of field-goal attempts by zone, same six axes for both games."
+        : "Share of attempts by shot style, read from the play-by-play text.";
+  }
+
+  document.getElementById("lgLast").textContent = LAST.label + " opener";
+  document.getElementById("lgThis").textContent = THIS.label + " opener";
+
+  dimToggle.addEventListener("click", (e) => {
+    const b = e.target.closest("button");
+    if (!b) return;
+    dim = b.dataset.dim;
+    [...dimToggle.querySelectorAll("button")].forEach((x) =>
+      x.setAttribute("aria-pressed", String(x === b))
+    );
+    drawRadar();
+  });
+  drawRadar();
+
+  /* ---------- findings ---------- */
+
+  const tL = LAST.totals, tT = THIS.totals;
+  const dThree = (tT.threeRate - tL.threeRate) * 100;
+  const dPaint = (tT.paintRate - tL.paintRate) * 100;
+  const dMid = (tT.midRate - tL.midRate) * 100;
+  const dEfg = (tT.efg - tL.efg) * 100;
+  const dDist = tT.avgDist - tL.avgDist;
+  const midL = zLast["Short mid"].att + zLast["Long mid"].att;
+  const midT = zThis["Short mid"].att + zThis["Long mid"].att;
+  const cls = (v) => (v >= 0 ? "up" : "down");
+  const num = (v, u) => `<span class="${cls(v)}">${signed(v, u)}</span>`;
+
+  const bullets = [
+    `<b>Three-point volume:</b> ${tL.tpa} of ${tL.chartedFga} attempts (${(tL.threeRate * 100).toFixed(0)}%) → ` +
+      `${tT.tpa} of ${tT.chartedFga} (${(tT.threeRate * 100).toFixed(0)}%), a ${num(dThree, " pts")} swing in three-point rate.`,
+    `<b>Paint pressure:</b> ${zLast["Paint"].att} attempts inside 8 ft (${(tL.paintRate * 100).toFixed(0)}%) → ` +
+      `${zThis["Paint"].att} (${(tT.paintRate * 100).toFixed(0)}%), ${num(dPaint, " pts")}.`,
+    `<b>Mid-range:</b> ${midL} attempts (${(tL.midRate * 100).toFixed(0)}%) → ${midT} (${(tT.midRate * 100).toFixed(0)}%), ${num(dMid, " pts")} of his diet.`,
+    `<b>Efficiency:</b> ${(tL.efg * 100).toFixed(1)}% eFG on ${tL.chartedFga} attempts → ${(tT.efg * 100).toFixed(1)}% on ${tT.chartedFga}, ${num(dEfg, " pts")}.`,
+    `<b>Shot distance:</b> average attempt ${tL.avgDist.toFixed(1)} ft → ${tT.avgDist.toFixed(1)} ft (${num(dDist, " ft")}).`,
+    `<b>Style mix:</b> ${(sThis["Pull-up"]?.att || 0) + (sThis["Step-back"]?.att || 0)} pull-up/step-back jumpers this year vs ` +
+      `${(sLast["Pull-up"]?.att || 0) + (sLast["Step-back"]?.att || 0)} last year; ` +
+      `${(sThis["Dunk"]?.att || 0) + (sThis["Layup"]?.att || 0)} rim finishes vs ${(sLast["Dunk"]?.att || 0) + (sLast["Layup"]?.att || 0)}.`,
+  ];
+  document.getElementById("findings").innerHTML = bullets.map((b) => `<li>${b}</li>`).join("");
+
+  /* ---------- footer ---------- */
+
+  document.getElementById("srcLine").textContent =
+    `${D.player.name} · ${LAST.label} opener (${LAST.date}, ${LAST.venue}) vs ${THIS.label} opener (${THIS.date}, ${THIS.venue}). ` +
+    `Official lines: ${LAST.box.pts} pts (${LAST.box.fg} FG, ${LAST.box.three} 3P) and ${THIS.box.pts} pts (${THIS.box.fg} FG, ${THIS.box.three} 3P).`;
+  document.getElementById("srcNote").textContent =
+    `Source: ${D.source} Charted attempts: ${LAST.totals.chartedFga} and ${THIS.totals.chartedFga} ` +
+    `(ESPN's public feed can list a play or two off the official box count). Built ${D.generated.slice(0, 10)}.`;
+})();
+</script>
+</body>
+</html>
